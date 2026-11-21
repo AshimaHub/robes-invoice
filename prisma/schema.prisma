@@ -59,16 +59,20 @@ model Membership {
 }
 
 model Branding {
-  id             String  @id @default(cuid())
-  tenantId       String  @unique
-  primaryColor   String  @default("#0B5E3C")
-  secondaryColor String  @default("#C4A35A")
-  accentColor    String  @default("#1A3A2A")
-  logoUrl        String?
-  faviconUrl     String?
-  loginHeroText  String?
-  emailFromName  String?
-  domainHint     String?
+  id                 String  @id @default(cuid())
+  tenantId           String  @unique
+  primaryColor       String  @default("#0B5E3C")
+  secondaryColor     String  @default("#C4A35A")
+  accentColor        String  @default("#1A3A2A")
+  logoUrl            String?
+  faviconUrl         String?
+  loginHeroText      String?
+  emailFromName      String?
+  domainHint         String?
+  /// Display name shown on company invoices (editable preference).
+  invoiceCompanyName String?
+  invoicePhone       String?
+  invoiceEmail       String?
 
   tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 }
@@ -105,29 +109,43 @@ model Party {
 }
 
 model Invoice {
-  id              String    @id @default(cuid())
-  tenantId        String
-  partyId         String?
-  channel         String    @default("COMPANY") // COMPANY | NRS
-  documentType    String    @default("INVOICE") // INVOICE | CREDIT_NOTE | DEBIT_NOTE
-  invoiceKind     String    @default("B2B") // B2B | B2C | B2G
-  invoiceNumber   String
-  issueDate       DateTime  @default(now())
-  currency        String    @default("NGN")
+  id               String    @id @default(cuid())
+  tenantId         String
+  partyId          String?
+  channel          String    @default("COMPANY") // COMPANY | NRS
+  documentType     String    @default("INVOICE") // INVOICE | CREDIT_NOTE | DEBIT_NOTE
+  invoiceKind      String    @default("B2B") // B2B | B2C | B2G
+  invoiceNumber    String
+  issueDate        DateTime  @default(now())
+  dueDate          DateTime?
+  currency         String    @default("NGN")
   // COMPANY: DRAFT | ISSUED | VOID — NRS: DRAFT | SUBMITTED | VALID | INVALID | CANCELED
-  status          String    @default("DRAFT")
-  irn             String?
-  qrPayload       String?
-  qrSvg           String?
-  mockClearanceAt DateTime?
-  validationMsg   String?
-  notes           String?
+  status           String    @default("DRAFT")
+  irn              String?
+  qrPayload        String?
+  qrSvg            String?
+  mockClearanceAt  DateTime?
+  validationMsg    String?
+  notes            String?
+  paymentTerms     String?
   relatedInvoiceId String?
-  subtotal        Float     @default(0)
-  vatTotal        Float     @default(0)
-  grandTotal      Float     @default(0)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  /// Company-invoice letterhead snapshot (not NRS).
+  sellerName       String?
+  sellerAddress    String?
+  sellerPhone      String?
+  sellerEmail      String?
+  sellerTin        String?
+  buyerName        String?
+  buyerAddress     String?
+  buyerEmail       String?
+  buyerPhone       String?
+  includeQr        Boolean   @default(false)
+  logoSnapshotUrl  String?
+  subtotal         Float     @default(0)
+  vatTotal         Float     @default(0)
+  grandTotal       Float     @default(0)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   tenant         Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   party          Party?         @relation(fields: [partyId], references: [id])

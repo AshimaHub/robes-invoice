@@ -93,9 +93,13 @@ export default async function CompanyInvoicesPage({
                       {inv.invoiceNumber}
                     </Link>
                   </td>
-                  <td className="px-4 py-3">{inv.party?.name ?? "—"}</td>
+                  <td className="px-4 py-3">
+                    {inv.buyerName || inv.party?.name || "—"}
+                  </td>
                   <td className="px-4 py-3">{formatDate(inv.issueDate)}</td>
-                  <td className="px-4 py-3">{formatMoney(inv.grandTotal)}</td>
+                  <td className="px-4 py-3">
+                    {formatMoney(inv.grandTotal, inv.currency)}
+                  </td>
                   <td className="px-4 py-3">
                     <StatusBadge status={inv.status} />
                   </td>

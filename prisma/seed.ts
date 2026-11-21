@@ -41,7 +41,10 @@ async function main() {
             "Company invoicing and NRS-compliant e-invoice tools — Robes Invoice demo.",
           emailFromName: "Robes Invoice",
           domainHint: "invoice.robes.demo",
-          logoUrl: null,
+          logoUrl: "/uploads/demo/acme-logo.svg",
+          invoiceCompanyName: "Acme Foods Nigeria Limited",
+          invoicePhone: "+234 801 111 2233",
+          invoiceEmail: "billing@acmefoods.demo",
         },
       },
       credentials: {
@@ -194,32 +197,82 @@ async function main() {
     },
   });
 
-  await prisma.invoice.create({
+  const companyIssue = new Date();
+  const companyDue = new Date(companyIssue.getTime() + 14 * 86400000);
+  const companyLines = [
+    {
+      description: "Wholesale dry goods (company channel)",
+      quantity: 10,
+      unitPrice: 1000,
+      vatRate: 7.5,
+      lineTotal: 10000,
+      vatAmount: 750,
+    },
+  ];
+  const companySubtotal = 10000;
+  const companyVat = 750;
+  const companyTotal = 10750;
+  const companyNumber = "CI-00001";
+  const companyQrPayload = JSON.stringify({
+    type: "robes.company_invoice",
+    version: 1,
+    invoiceNumber: companyNumber,
+    issueDate: companyIssue.toISOString().slice(0, 10),
+    dueDate: companyDue.toISOString().slice(0, 10),
+    currency: "NGN",
+    seller: { name: "Acme Foods Nigeria Limited", tin: tenant.tin },
+    buyer: { name: party.name },
+    totals: {
+      subtotal: companySubtotal,
+      tax: companyVat,
+      grandTotal: companyTotal,
+    },
+    lines: companyLines.map((l) => ({
+      description: l.description,
+      qty: l.quantity,
+      unitPrice: l.unitPrice,
+      lineTotal: l.lineTotal,
+      tax: l.vatAmount,
+    })),
+  });
+  const companyQrSvg = await QRCode.toString(companyQrPayload, {
+    type: "svg",
+    margin: 1,
+    width: 160,
+    color: { dark: "#143D2B", light: "#FFFFFF" },
+  });
+
+  const companyInvoice = await prisma.invoice.create({
     data: {
       tenantId: tenant.id,
       partyId: party.id,
       channel: "COMPANY",
       documentType: "INVOICE",
       invoiceKind: "B2B",
-      invoiceNumber: "CI-00001",
-      issueDate: new Date(),
+      invoiceNumber: companyNumber,
+      issueDate: companyIssue,
+      dueDate: companyDue,
+      currency: "NGN",
       status: "ISSUED",
-      notes: "Sample company invoice (commercial only).",
-      subtotal: 10000,
-      vatTotal: 750,
-      grandTotal: 10750,
-      lines: {
-        create: [
-          {
-            description: "Wholesale dry goods (company channel)",
-            quantity: 10,
-            unitPrice: 1000,
-            vatRate: 7.5,
-            lineTotal: 10000,
-            vatAmount: 750,
-          },
-        ],
-      },
+      notes: "Sample company invoice (commercial only — not NRS).",
+      paymentTerms: "Net 14 days · Bank transfer",
+      sellerName: "Acme Foods Nigeria Limited",
+      sellerAddress: "12 Warehouse Road\nLagos, Lagos\nNigeria",
+      sellerPhone: "+234 801 111 2233",
+      sellerEmail: "billing@acmefoods.demo",
+      sellerTin: tenant.tin,
+      buyerName: party.name,
+      buyerAddress: "45 Trade Fair Complex\nLagos, Lagos\nNigeria",
+      buyerEmail: party.email,
+      buyerPhone: party.phone,
+      includeQr: true,
+      logoSnapshotUrl: "/uploads/demo/acme-logo.svg",
+      qrPayload: companyQrPayload,
+      qrSvg: companyQrSvg,
+      subtotal: companySubtotal,
+      vatTotal: companyVat,
+      grandTotal: companyTotal,
+      lines: { create: companyLines },
     },
   });
 
@@ -235,6 +288,8 @@ async function main() {
         partyId: party.id,
         nrsInvoiceId: nrsInvoice.id,
         nrsInvoiceNumber: nrsInvoice.invoiceNumber,
+        companyInvoiceId: companyInvoice.id,
+        companyInvoiceNumber: companyInvoice.invoiceNumber,
       }),
     },
   });
@@ -244,7 +299,11 @@ async function main() {
   console.log("  Issuer: issuer@acmefoods.demo / demo1234");
   console.log("  NRS gate: completed for both users");
   console.log(`  Cleared NRS invoice: ${nrsInvoice.invoiceNumber} id=${nrsInvoice.id}`);
-  console.log(`  View URL: /nrs/invoices/${nrsInvoice.id}/view`);
+  console.log(`  NRS view: /nrs/invoices/${nrsInvoice.id}/view`);
+  console.log(
+    `  Company invoice: ${companyInvoice.invoiceNumber} id=${companyInvoice.id}`,
+  );
+  console.log(`  Company view/print: /company/invoices/${companyInvoice.id}/view`);
 }
 
 main()

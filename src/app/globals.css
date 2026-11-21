@@ -318,27 +318,38 @@ body {
   width: 3rem;
 }
 
+/* —— Company commercial invoice —— */
+.company-qr svg {
+  width: 120px;
+  height: 120px;
+  display: block;
+}
+
 @media print {
   .auth-motif-bg,
   .login-motion {
     display: none !important;
   }
 
-  .nrs-document-shell {
+  .nrs-document-shell,
+  .document-shell {
     background: white !important;
   }
 
   .nrs-view-toolbar,
+  .company-view-toolbar,
   .print\:hidden {
     display: none !important;
   }
 
-  .nrs-doc {
+  .nrs-doc,
+  .company-doc {
     box-shadow: none !important;
     max-width: none !important;
   }
 
-  .nrs-doc-inner {
+  .nrs-doc-inner,
+  .company-doc-inner {
     padding: 0 !important;
   }
 

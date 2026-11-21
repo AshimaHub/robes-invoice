@@ -48,6 +48,12 @@ next-env.d.ts
 prisma/dev.db
 prisma/dev.db-journal
 
+# tenant logo uploads (keep demo assets)
+/public/uploads/*
+!/public/uploads/.gitkeep
+!/public/uploads/demo/
+!/public/uploads/demo/**
+
 # prisma agent skill dumps
 .agents/
 .claude/

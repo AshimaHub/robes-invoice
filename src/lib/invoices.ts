@@ -1,3 +1,4 @@
+import QRCode from "qrcode";
 import { prisma } from "./prisma";
 import { getNrsAdapter } from "./nrs/mock-adapter";
 
@@ -7,6 +8,21 @@ export type LineInput = {
   unitPrice: number;
   vatRate?: number;
   hsnCode?: string;
+};
+
+export type CompanySellerInput = {
+  name: string;
+  address?: string;
+  phone?: string;
+  email?: string;
+  tin?: string;
+};
+
+export type CompanyBuyerInput = {
+  name: string;
+  address?: string;
+  phone?: string;
+  email?: string;
 };
 
 function computeLines(lines: LineInput[]) {
@@ -32,29 +48,126 @@ async function nextInvoiceNumber(tenantId: string, prefix: string) {
   return `${prefix}-${seq}`;
 }
 
+function buildCompanyQrPayload(data: {
+  invoiceNumber: string;
+  issueDate: Date;
+  dueDate: Date | null;
+  currency: string;
+  sellerName: string;
+  sellerTin: string | null;
+  buyerName: string;
+  subtotal: number;
+  vatTotal: number;
+  grandTotal: number;
+  lines: { description: string; quantity: number; unitPrice: number; lineTotal: number; vatAmount: number }[];
+}) {
+  return JSON.stringify({
+    type: "robes.company_invoice",
+    version: 1,
+    invoiceNumber: data.invoiceNumber,
+    issueDate: data.issueDate.toISOString().slice(0, 10),
+    dueDate: data.dueDate ? data.dueDate.toISOString().slice(0, 10) : null,
+    currency: data.currency,
+    seller: { name: data.sellerName, tin: data.sellerTin },
+    buyer: { name: data.buyerName },
+    totals: {
+      subtotal: data.subtotal,
+      tax: data.vatTotal,
+      grandTotal: data.grandTotal,
+    },
+    lines: data.lines.map((l) => ({
+      description: l.description,
+      qty: l.quantity,
+      unitPrice: l.unitPrice,
+      lineTotal: l.lineTotal,
+      tax: l.vatAmount,
+    })),
+  });
+}
+
 /** Commercial company invoice — no NRS mock clearance. */
 export async function createCompanyInvoice(opts: {
   tenantId: string;
   userId: string;
   partyId?: string | null;
   invoiceKind?: string;
-  notes?: string;
+  invoiceNumber?: string | null;
+  issueDate?: Date;
+  dueDate?: Date | null;
+  currency?: string;
+  notes?: string | null;
+  paymentTerms?: string | null;
+  seller: CompanySellerInput;
+  buyer: CompanyBuyerInput;
+  includeQr?: boolean;
+  logoUrl?: string | null;
+  persistBranding?: boolean;
   lines: LineInput[];
 }) {
   const computed = computeLines(opts.lines);
   if (computed.length === 0) throw new Error("Add at least one line item.");
+  if (!opts.seller.name.trim()) throw new Error("Seller company name is required.");
+  if (!opts.buyer.name.trim()) throw new Error("Buyer name is required.");
 
   const subtotal = Number(computed.reduce((s, l) => s + l.lineTotal, 0).toFixed(2));
   const vatTotal = Number(computed.reduce((s, l) => s + l.vatAmount, 0).toFixed(2));
   const grandTotal = Number((subtotal + vatTotal).toFixed(2));
-  const invoiceNumber = await nextInvoiceNumber(opts.tenantId, "CI");
-  const issueDate = new Date();
+  const invoiceNumber =
+    opts.invoiceNumber?.trim() || (await nextInvoiceNumber(opts.tenantId, "CI"));
+  const issueDate = opts.issueDate ?? new Date();
+  const dueDate = opts.dueDate ?? null;
+  const currency = opts.currency?.trim() || "NGN";
+  const includeQr = Boolean(opts.includeQr);
+  const logoSnapshotUrl = opts.logoUrl || null;
 
   const party = opts.partyId
     ? await prisma.party.findFirst({
         where: { id: opts.partyId, tenantId: opts.tenantId },
       })
     : null;
+
+  let qrPayload: string | null = null;
+  let qrSvg: string | null = null;
+  if (includeQr) {
+    qrPayload = buildCompanyQrPayload({
+      invoiceNumber,
+      issueDate,
+      dueDate,
+      currency,
+      sellerName: opts.seller.name.trim(),
+      sellerTin: opts.seller.tin?.trim() || null,
+      buyerName: opts.buyer.name.trim(),
+      subtotal,
+      vatTotal,
+      grandTotal,
+      lines: computed,
+    });
+    qrSvg = await QRCode.toString(qrPayload, {
+      type: "svg",
+      margin: 1,
+      width: 160,
+      color: { dark: "#143D2B", light: "#FFFFFF" },
+    });
+  }
+
+  if (opts.persistBranding) {
+    await prisma.branding.upsert({
+      where: { tenantId: opts.tenantId },
+      create: {
+        tenantId: opts.tenantId,
+        invoiceCompanyName: opts.seller.name.trim(),
+        invoicePhone: opts.seller.phone?.trim() || null,
+        invoiceEmail: opts.seller.email?.trim() || null,
+        logoUrl: logoSnapshotUrl,
+      },
+      update: {
+        invoiceCompanyName: opts.seller.name.trim(),
+        invoicePhone: opts.seller.phone?.trim() || null,
+        invoiceEmail: opts.seller.email?.trim() || null,
+        ...(logoSnapshotUrl ? { logoUrl: logoSnapshotUrl } : {}),
+      },
+    });
+  }
 
   const invoice = await prisma.invoice.create({
     data: {
@@ -65,8 +178,24 @@ export async function createCompanyInvoice(opts: {
       invoiceKind: opts.invoiceKind ?? "B2B",
       invoiceNumber,
       issueDate,
+      dueDate,
+      currency,
       status: "ISSUED",
-      notes: opts.notes || null,
+      notes: opts.notes?.trim() || null,
+      paymentTerms: opts.paymentTerms?.trim() || null,
+      sellerName: opts.seller.name.trim(),
+      sellerAddress: opts.seller.address?.trim() || null,
+      sellerPhone: opts.seller.phone?.trim() || null,
+      sellerEmail: opts.seller.email?.trim() || null,
+      sellerTin: opts.seller.tin?.trim() || null,
+      buyerName: opts.buyer.name.trim(),
+      buyerAddress: opts.buyer.address?.trim() || null,
+      buyerEmail: opts.buyer.email?.trim() || null,
+      buyerPhone: opts.buyer.phone?.trim() || null,
+      includeQr,
+      logoSnapshotUrl,
+      qrPayload,
+      qrSvg,
       subtotal,
       vatTotal,
       grandTotal,
@@ -82,7 +211,7 @@ export async function createCompanyInvoice(opts: {
       action: "COMPANY_INVOICE_CREATED",
       entity: "Invoice",
       entityId: invoice.id,
-      meta: JSON.stringify({ invoiceNumber, grandTotal }),
+      meta: JSON.stringify({ invoiceNumber, grandTotal, includeQr }),
     },
   });
 
