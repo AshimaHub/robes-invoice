@@ -4,6 +4,8 @@ import { getNrsGateStatus } from "@/lib/nrs-gate";
 import { prisma } from "@/lib/prisma";
 import { formatMoney } from "@/lib/tenant";
 
+export const instant = false;
+
 export default async function NrsHubPage({
   searchParams,
 }: {

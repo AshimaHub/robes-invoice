@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { formatDate, formatMoney } from "@/lib/tenant";
 import { StatusBadge } from "@/components/status-badge";
 
+export const instant = false;
+
 export default async function CompanyInvoicesPage({
   searchParams,
 }: {

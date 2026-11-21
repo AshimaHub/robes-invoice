@@ -6,6 +6,8 @@ import { prisma } from "@/lib/prisma";
 import { NrsInvoiceDocument } from "@/components/nrs-invoice-document";
 import { PrintButton } from "@/components/print-button";
 
+export const instant = false;
+
 export default async function NrsInvoiceViewPage({
   params,
 }: {

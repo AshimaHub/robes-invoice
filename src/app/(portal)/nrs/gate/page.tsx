@@ -25,6 +25,8 @@ async function saveGateAction(formData: FormData) {
   redirect("/nrs/gate?saved=1");
 }
 
+export const instant = false;
+
 export default async function NrsGatePage({
   searchParams,
 }: {

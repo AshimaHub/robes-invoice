@@ -49,6 +49,8 @@ async function creditNoteAction(formData: FormData) {
   redirect(`/nrs/invoices/${noteId}?cleared=1`);
 }
 
+export const instant = false;
+
 export default async function NrsInvoiceDetailPage({
   params,
   searchParams,

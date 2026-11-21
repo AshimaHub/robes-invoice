@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { getSession, loginWithPassword } from "@/lib/auth";
 import { AuthMotifBackground } from "@/components/auth-motif-background";
 
+export const instant = false;
+
 async function loginAction(formData: FormData) {
   "use server";
   const email = String(formData.get("email") || "");

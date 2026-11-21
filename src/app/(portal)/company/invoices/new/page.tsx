@@ -105,6 +105,8 @@ async function createInvoiceAction(formData: FormData) {
   redirect(`/company/invoices/${invoiceId}/view`);
 }
 
+export const instant = false;
+
 export default async function NewCompanyInvoicePage({
   searchParams,
 }: {

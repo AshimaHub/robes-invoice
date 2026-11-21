@@ -6,6 +6,8 @@ import { StatusBadge } from "@/components/status-badge";
 import { SimpleBarChart } from "@/components/simple-bar-chart";
 import { getNrsGateStatus } from "@/lib/nrs-gate";
 
+export const instant = false;
+
 export default async function DashboardPage() {
   const session = await requireSession();
   const tenantId = session.tenantId;

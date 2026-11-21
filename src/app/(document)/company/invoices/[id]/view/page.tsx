@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 import { CompanyInvoiceDocument } from "@/components/company-invoice-document";
 import { PrintButton } from "@/components/print-button";
 
+export const instant = false;
+
 export default async function CompanyInvoiceViewPage({
   params,
 }: {

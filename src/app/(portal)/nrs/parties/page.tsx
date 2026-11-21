@@ -37,6 +37,8 @@ async function addPartyAction(formData: FormData) {
   redirect("/nrs/parties");
 }
 
+export const instant = false;
+
 export default async function NrsPartiesPage({
   searchParams,
 }: {

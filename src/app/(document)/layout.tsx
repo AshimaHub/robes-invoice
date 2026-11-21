@@ -1,5 +1,8 @@
 import { requireSession } from "@/lib/auth";
 
+/** Session-gated document views; allow blocking (no instant shell). */
+export const instant = false;
+
 /** Minimal chrome for printable document views (no portal nav / auth motifs). */
 export default async function DocumentLayout({
   children,

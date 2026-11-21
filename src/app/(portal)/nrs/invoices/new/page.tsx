@@ -44,6 +44,8 @@ async function createInvoiceAction(formData: FormData) {
   redirect(`/nrs/invoices/${invoiceId}?cleared=1`);
 }
 
+export const instant = false;
+
 export default async function NewNrsInvoicePage({
   searchParams,
 }: {
