@@ -1,7 +1,7 @@
 import { prisma } from "./prisma";
 
 export async function getTenantWithBranding(tenantId: string) {
-  return prisma.tenant.findUniqueOrThrow({
+  return prisma.tenant.findUnique({
     where: { id: tenantId },
     include: { branding: true },
   });

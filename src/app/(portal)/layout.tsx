@@ -1,4 +1,7 @@
-import { requireSession } from "@/lib/auth";
+import {
+  clearSessionAndRedirectToLogin,
+  requireSession,
+} from "@/lib/auth";
 import { AppShell } from "@/components/app-shell";
 import { getTenantWithBranding } from "@/lib/tenant";
 
@@ -12,6 +15,10 @@ export default async function PortalLayout({
 }) {
   const session = await requireSession();
   const tenant = await getTenantWithBranding(session.tenantId);
+
+  if (!tenant) {
+    clearSessionAndRedirectToLogin();
+  }
 
   return (
     <AppShell session={session} branding={tenant.branding}>

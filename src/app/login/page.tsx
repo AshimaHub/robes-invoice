@@ -1,5 +1,12 @@
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { getSession, loginWithPassword } from "@/lib/auth";
+import {
+  CLEAR_SESSION_PATH,
+  getSession,
+  LEGACY_SESSION_COOKIES,
+  loginWithPassword,
+  SESSION_COOKIE,
+} from "@/lib/auth";
 import { AuthMotifBackground } from "@/components/auth-motif-background";
 
 export const instant = false;
@@ -22,6 +29,13 @@ export default async function LoginPage({
 }) {
   const session = await getSession();
   if (session) redirect("/dashboard");
+
+  // Drop stale/legacy cookies via Route Handler before showing the form.
+  const jar = await cookies();
+  const stalePresent =
+    Boolean(jar.get(SESSION_COOKIE)?.value) ||
+    LEGACY_SESSION_COOKIES.some((name) => Boolean(jar.get(name)?.value));
+  if (stalePresent) redirect(CLEAR_SESSION_PATH);
 
   const params = await searchParams;
   const primary = "#0B5E3C";
