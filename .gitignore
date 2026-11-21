@@ -60,3 +60,7 @@ prisma/dev.db-journal
 .windsurf/
 skills-lock.json
 
+
+# render cli local
+.render/
+
