@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { logout } from "@/lib/auth";
 import type { SessionUser } from "@/lib/auth";
+import { AuthMotifBackground } from "@/components/auth-motif-background";
 
 const primaryNav = [
   { href: "/dashboard", label: "Dashboard" },
@@ -28,7 +29,7 @@ export function AppShell({
 
   return (
     <div
-      className="min-h-screen"
+      className="relative min-h-screen"
       style={
         {
           "--brand-primary": primary,
@@ -39,8 +40,9 @@ export function AppShell({
         } as React.CSSProperties
       }
     >
+      <AuthMotifBackground variant="app" />
       <header
-        className="border-b border-black/10"
+        className="relative z-10 border-b border-black/10"
         style={{ background: "color-mix(in srgb, var(--brand-accent) 92%, black)" }}
       >
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-3 text-white">
@@ -92,8 +94,8 @@ export function AppShell({
           ))}
         </nav>
       </header>
-      <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
-      <footer className="mx-auto max-w-6xl px-4 pb-8 text-xs text-black/50">
+      <main className="relative z-10 mx-auto max-w-6xl px-4 py-8">{children}</main>
+      <footer className="relative z-10 mx-auto max-w-6xl px-4 pb-8 text-xs text-black/50">
         Robes Invoice — company invoicing plus optional NRS mock clearance (not live Nigeria
         Revenue Service submission).
       </footer>

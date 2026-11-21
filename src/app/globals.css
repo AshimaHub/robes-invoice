@@ -106,13 +106,51 @@ body {
   animation: soft-pulse 1.2s ease-out 1;
 }
 
-/* —— Login motion background —— */
+/* —— Auth / login motion background —— */
+.auth-motif-bg--login {
+  color: #e8f0ea;
+}
+
+.auth-motif-bg--login .login-motif {
+  color: #dce8df;
+}
+
+/* Softer dark-green motifs on light app chrome */
+.auth-motif-bg--app {
+  color: color-mix(in srgb, var(--brand-primary, #0b5e3c) 72%, #143d2b);
+}
+
+.auth-motif-bg--app .login-motif {
+  color: inherit;
+}
+
+.auth-motif-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(196, 163, 90, 0.18), transparent 55%),
+    radial-gradient(ellipse at 80% 80%, rgba(0, 0, 0, 0.22), transparent 50%);
+}
+
+.auth-motif-vignette--app {
+  background:
+    radial-gradient(
+      ellipse at 18% 0%,
+      color-mix(in srgb, var(--brand-secondary, #c4a35a) 20%, transparent),
+      transparent 52%
+    ),
+    radial-gradient(
+      ellipse at 92% 100%,
+      color-mix(in srgb, var(--brand-primary, #0b5e3c) 9%, transparent),
+      transparent 58%
+    );
+}
+
 .login-motion {
   color: #e8f0ea;
 }
 
 .login-motif {
-  color: #dce8df;
   will-change: transform, opacity;
 }
 
@@ -281,6 +319,11 @@ body {
 }
 
 @media print {
+  .auth-motif-bg,
+  .login-motion {
+    display: none !important;
+  }
+
   .nrs-document-shell {
     background: white !important;
   }

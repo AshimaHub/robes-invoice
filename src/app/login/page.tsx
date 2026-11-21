@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getSession, loginWithPassword } from "@/lib/auth";
-import { LoginMotionBg } from "@/components/login-motion-bg";
+import { AuthMotifBackground } from "@/components/auth-motif-background";
 
 async function loginAction(formData: FormData) {
   "use server";
@@ -38,7 +38,7 @@ export default async function LoginPage({
         } as React.CSSProperties
       }
     >
-      <LoginMotionBg />
+      <AuthMotifBackground variant="login" />
 
       <div className="anim-rise relative z-10 w-full max-w-md rounded-2xl bg-[#f7f4ec] p-8 shadow-xl shadow-black/30">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--brand-primary)]">
