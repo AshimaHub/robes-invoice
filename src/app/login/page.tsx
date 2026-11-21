@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { getSession, loginWithPassword } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
 
 async function loginAction(formData: FormData) {
   "use server";
@@ -10,7 +9,7 @@ async function loginAction(formData: FormData) {
   if (!result.ok) {
     redirect(`/login?error=${encodeURIComponent(result.error)}`);
   }
-  redirect("/app");
+  redirect("/dashboard");
 }
 
 export default async function LoginPage({
@@ -19,18 +18,12 @@ export default async function LoginPage({
   searchParams: Promise<{ error?: string }>;
 }) {
   const session = await getSession();
-  if (session) redirect("/app");
+  if (session) redirect("/dashboard");
 
   const params = await searchParams;
-  const branding = await prisma.branding.findFirst({
-    include: { tenant: true },
-    where: { tenant: { slug: "acme-foods" } },
-  });
-
-  const primary = branding?.primaryColor ?? "#0B5E3C";
-  const secondary = branding?.secondaryColor ?? "#C4A35A";
-  const accent = branding?.accentColor ?? "#143D2B";
-  const tenantName = branding?.tenant.name ?? "Robes eInvoice";
+  const primary = "#0B5E3C";
+  const secondary = "#C4A35A";
+  const accent = "#143D2B";
 
   return (
     <div
@@ -57,14 +50,13 @@ export default async function LoginPage({
 
       <div className="anim-rise relative z-10 w-full max-w-md rounded-2xl bg-[#f7f4ec] p-8 shadow-xl shadow-black/20">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--brand-primary)]">
-          Robes eInvoice
+          Robes
         </p>
         <h1 className="font-display mt-2 text-3xl text-[color:var(--brand-accent)]">
-          {tenantName}
+          Robes Invoice
         </h1>
         <p className="mt-2 text-sm text-black/65">
-          {branding?.loginHeroText ??
-            "White-label NRS e-Invoice issuer for your finance team."}
+          Company invoicing and NRS-compliant e-invoice tools for your finance team.
         </p>
 
         {params.error ? (
@@ -103,17 +95,17 @@ export default async function LoginPage({
             />
           </div>
           <button type="submit" className="btn-primary w-full anim-pulse-once">
-            Sign in to demo
+            Sign in
           </button>
         </form>
 
         <div className="anim-rise-delay mt-6 rounded-lg border border-black/8 bg-white/60 p-3 text-xs text-black/60">
           <p className="font-semibold text-[color:var(--brand-accent)]">
-            Demo accounts (Acme Foods)
+            Robes Invoice demo accounts
           </p>
           <p className="mt-1">admin@acmefoods.demo / demo1234 (Tenant Admin)</p>
           <p>issuer@acmefoods.demo / demo1234 (Issuer)</p>
-          <p className="mt-2 italic">Mock clearance only — not live NRS.</p>
+          <p className="mt-2 italic">Demo tenant data only — product brand is Robes Invoice.</p>
         </div>
       </div>
     </div>

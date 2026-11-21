@@ -32,6 +32,64 @@ async function nextInvoiceNumber(tenantId: string, prefix: string) {
   return `${prefix}-${seq}`;
 }
 
+/** Commercial company invoice — no NRS mock clearance. */
+export async function createCompanyInvoice(opts: {
+  tenantId: string;
+  userId: string;
+  partyId?: string | null;
+  invoiceKind?: string;
+  notes?: string;
+  lines: LineInput[];
+}) {
+  const computed = computeLines(opts.lines);
+  if (computed.length === 0) throw new Error("Add at least one line item.");
+
+  const subtotal = Number(computed.reduce((s, l) => s + l.lineTotal, 0).toFixed(2));
+  const vatTotal = Number(computed.reduce((s, l) => s + l.vatAmount, 0).toFixed(2));
+  const grandTotal = Number((subtotal + vatTotal).toFixed(2));
+  const invoiceNumber = await nextInvoiceNumber(opts.tenantId, "CI");
+  const issueDate = new Date();
+
+  const party = opts.partyId
+    ? await prisma.party.findFirst({
+        where: { id: opts.partyId, tenantId: opts.tenantId },
+      })
+    : null;
+
+  const invoice = await prisma.invoice.create({
+    data: {
+      tenantId: opts.tenantId,
+      partyId: party?.id ?? null,
+      channel: "COMPANY",
+      documentType: "INVOICE",
+      invoiceKind: opts.invoiceKind ?? "B2B",
+      invoiceNumber,
+      issueDate,
+      status: "ISSUED",
+      notes: opts.notes || null,
+      subtotal,
+      vatTotal,
+      grandTotal,
+      lines: { create: computed },
+    },
+    include: { lines: true, party: true },
+  });
+
+  await prisma.auditEvent.create({
+    data: {
+      tenantId: opts.tenantId,
+      userId: opts.userId,
+      action: "COMPANY_INVOICE_CREATED",
+      entity: "Invoice",
+      entityId: invoice.id,
+      meta: JSON.stringify({ invoiceNumber, grandTotal }),
+    },
+  });
+
+  return invoice;
+}
+
+/** NRS channel invoice with mock clearance (IRN + QR). */
 export async function createAndClearInvoice(opts: {
   tenantId: string;
   userId: string;
@@ -57,10 +115,14 @@ export async function createAndClearInvoice(opts: {
   let relatedIrn: string | null = null;
   if (opts.relatedInvoiceId) {
     const related = await prisma.invoice.findFirst({
-      where: { id: opts.relatedInvoiceId, tenantId: opts.tenantId },
+      where: {
+        id: opts.relatedInvoiceId,
+        tenantId: opts.tenantId,
+        channel: "NRS",
+      },
     });
     if (!related || related.status !== "VALID" || !related.irn) {
-      throw new Error("Credit/debit notes require a cleared (VALID) original invoice.");
+      throw new Error("Credit/debit notes require a cleared (VALID) original NRS invoice.");
     }
     relatedIrn = related.irn;
   }
@@ -84,6 +146,7 @@ export async function createAndClearInvoice(opts: {
     data: {
       tenantId: opts.tenantId,
       partyId: party?.id ?? null,
+      channel: "NRS",
       documentType,
       invoiceKind: opts.invoiceKind ?? "B2B",
       invoiceNumber,

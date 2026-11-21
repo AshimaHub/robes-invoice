@@ -1,21 +1,21 @@
-# Robes eInvoice
+# Robes Invoice
 
-White-label NRS (Nigeria Revenue Service / MBS) e-Invoice issuer — **Slice 0 mock-first MVP**.
+**Robes Invoice** (business: **Robes**) — company invoicing plus optional NRS-compliant e-invoice tools.
 
-This build uses **MockNrsAdapter** only. It does **not** submit to live NRS / MBS.
+This build uses **MockNrsAdapter** for NRS only. It does **not** submit to live NRS / MBS.
 
 ## Path
 
-`H:\robes-einvoice` on `DESKTOP-NI06M5D`
+`H:\robes-einvoice`
 
 ## Stack
 
 - Next.js (App Router) + TypeScript + Tailwind
-- Prisma + **SQLite** (local pragmatism — Postgres not installed on this machine; plan recommended Postgres)
+- Prisma + **SQLite**
 - Cookie session auth (demo-grade)
 - `MockNrsAdapter` behind an NRS adapter interface
 
-## Demo login (Acme Foods)
+## Demo login (Robes Invoice demo)
 
 | Role | Email | Password |
 | --- | --- | --- |
@@ -34,18 +34,17 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000)
 
+## Key URLs
+
+- `/` → login or dashboard
+- `/dashboard` — cards + charts
+- `/company/invoices` — Generate Company invoice
+- `/nrs/gate` — NRS readiness questionnaire
+- `/nrs` — NRS hub (blocked until gate passed)
+
 ## Scripts
 
 - `npm run dev` — development server
 - `npm run build` / `npm start` — production build
-- `npm run db:seed` — reseed Acme Foods demo tenant
+- `npm run db:seed` — reseed demo tenant
 - `npx prisma studio` — inspect SQLite DB
-
-## Slice 0 scope
-
-- Multi-tenant schema (tenants, users, branding, credentials stub, parties, invoices, lines, clearance events, audit)
-- Branded login + app chrome
-- Invoice create → mock clearance → IRN + QR
-- Invoice list/detail + status timeline
-- Credit note against a cleared invoice
-- Branding settings (Tenant Admin)

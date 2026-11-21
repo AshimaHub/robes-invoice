@@ -2,12 +2,10 @@ import Link from "next/link";
 import { logout } from "@/lib/auth";
 import type { SessionUser } from "@/lib/auth";
 
-const nav = [
-  { href: "/app", label: "Dashboard" },
-  { href: "/app/invoices", label: "Invoices" },
-  { href: "/app/invoices/new", label: "New invoice" },
-  { href: "/app/parties", label: "Parties" },
-  { href: "/app/branding", label: "Branding" },
+const primaryNav = [
+  { href: "/dashboard", label: "Dashboard" },
+  { href: "/company/invoices", label: "Generate Company invoice" },
+  { href: "/nrs", label: "NRS Compliant e-Invoice" },
 ];
 
 export function AppShell({
@@ -52,14 +50,14 @@ export function AppShell({
               style={{ background: "var(--brand-secondary)", color: accent }}
               aria-hidden
             >
-              {session.tenantName.slice(0, 2).toUpperCase()}
+              RI
             </div>
             <div>
-              <p className="text-xs uppercase tracking-[0.14em] text-white/70">
-                Robes eInvoice
-              </p>
               <p className="font-[family-name:var(--font-display)] text-lg leading-tight">
-                {session.tenantName}
+                Robes Invoice
+              </p>
+              <p className="text-xs text-white/70">
+                Robes · {session.tenantName}
               </p>
             </div>
           </div>
@@ -83,7 +81,7 @@ export function AppShell({
           </div>
         </div>
         <nav className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-4 pb-3">
-          {nav.map((item) => (
+          {primaryNav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -96,7 +94,8 @@ export function AppShell({
       </header>
       <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
       <footer className="mx-auto max-w-6xl px-4 pb-8 text-xs text-black/50">
-        Mock NRS clearance only — not live Nigeria Revenue Service submission.
+        Robes Invoice — company invoicing plus optional NRS mock clearance (not live Nigeria
+        Revenue Service submission).
       </footer>
     </div>
   );

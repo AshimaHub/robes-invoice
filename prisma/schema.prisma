@@ -23,12 +23,13 @@ model Tenant {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  branding    Branding?
-  credentials Credential[]
-  memberships Membership[]
-  parties     Party[]
-  invoices    Invoice[]
-  auditEvents AuditEvent[]
+  branding       Branding?
+  credentials    Credential[]
+  memberships    Membership[]
+  parties        Party[]
+  invoices       Invoice[]
+  auditEvents    AuditEvent[]
+  nrsGateProgress NrsGateProgress[]
 }
 
 model User {
@@ -39,8 +40,9 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  memberships Membership[]
-  auditEvents AuditEvent[]
+  memberships     Membership[]
+  auditEvents     AuditEvent[]
+  nrsGateProgress NrsGateProgress[]
 }
 
 model Membership {
@@ -106,12 +108,14 @@ model Invoice {
   id              String    @id @default(cuid())
   tenantId        String
   partyId         String?
+  channel         String    @default("COMPANY") // COMPANY | NRS
   documentType    String    @default("INVOICE") // INVOICE | CREDIT_NOTE | DEBIT_NOTE
   invoiceKind     String    @default("B2B") // B2B | B2C | B2G
   invoiceNumber   String
   issueDate       DateTime  @default(now())
   currency        String    @default("NGN")
-  status          String    @default("DRAFT") // DRAFT | SUBMITTED | VALID | INVALID | CANCELED
+  // COMPANY: DRAFT | ISSUED | VOID — NRS: DRAFT | SUBMITTED | VALID | INVALID | CANCELED
+  status          String    @default("DRAFT")
   irn             String?
   qrPayload       String?
   qrSvg           String?
@@ -134,6 +138,24 @@ model Invoice {
 
   @@unique([tenantId, invoiceNumber])
   @@index([tenantId, status])
+  @@index([tenantId, channel])
+}
+
+/// Prerequisite questionnaire before NRS Compliant e-Invoice features.
+model NrsGateProgress {
+  id          String    @id @default(cuid())
+  tenantId    String
+  userId      String
+  answersJson String    @default("{}")
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, userId])
 }
 
 model InvoiceLine {

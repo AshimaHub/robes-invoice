@@ -15,9 +15,9 @@ const body = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
-  title: "Robes eInvoice",
+  title: "Robes Invoice",
   description:
-    "White-label NRS e-Invoice issuer — mock clearance demo (not live NRS).",
+    "Robes Invoice — company invoicing and NRS-compliant e-invoice tools (mock clearance; not live NRS).",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

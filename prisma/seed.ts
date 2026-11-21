@@ -10,6 +10,7 @@ async function main() {
   await prisma.party.deleteMany();
   await prisma.credential.deleteMany();
   await prisma.branding.deleteMany();
+  await prisma.nrsGateProgress.deleteMany();
   await prisma.auditEvent.deleteMany();
   await prisma.membership.deleteMany();
   await prisma.user.deleteMany();
@@ -35,9 +36,10 @@ async function main() {
           primaryColor: "#0B5E3C",
           secondaryColor: "#C4A35A",
           accentColor: "#143D2B",
-          loginHeroText: "Issue NRS-ready invoices under your brand.",
-          emailFromName: "Acme Foods eInvoice",
-          domainHint: "einvoice.acmefoods.ng",
+          loginHeroText:
+            "Company invoicing and NRS-compliant e-invoice tools — Robes Invoice demo.",
+          emailFromName: "Robes Invoice",
+          domainHint: "invoice.robes.demo",
           logoUrl: null,
         },
       },
@@ -103,7 +105,7 @@ async function main() {
     },
   });
 
-  console.log("Seeded Acme Foods demo tenant");
+  console.log("Seeded Robes Invoice demo tenant (sample org: Acme Foods)");
   console.log("  Admin:  admin@acmefoods.demo / demo1234");
   console.log("  Issuer: issuer@acmefoods.demo / demo1234");
 }
