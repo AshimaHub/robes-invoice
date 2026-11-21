@@ -1,0 +1,175 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id           String   @id @default(cuid())
+  name         String
+  slug         String   @unique
+  legalName    String
+  tin          String
+  businessId   String?
+  serviceId    String
+  addressLine1 String?
+  city         String?
+  state        String?
+  lga          String?
+  nrsEnv       String   @default("SANDBOX") // SANDBOX | PRODUCTION
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  branding    Branding?
+  credentials Credential[]
+  memberships Membership[]
+  parties     Party[]
+  invoices    Invoice[]
+  auditEvents AuditEvent[]
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  memberships Membership[]
+  auditEvents AuditEvent[]
+}
+
+model Membership {
+  id        String   @id @default(cuid())
+  role      String // TENANT_ADMIN | ISSUER | APPROVER | VIEWER
+  userId    String
+  tenantId  String
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tenantId])
+}
+
+model Branding {
+  id             String  @id @default(cuid())
+  tenantId       String  @unique
+  primaryColor   String  @default("#0B5E3C")
+  secondaryColor String  @default("#C4A35A")
+  accentColor    String  @default("#1A3A2A")
+  logoUrl        String?
+  faviconUrl     String?
+  loginHeroText  String?
+  emailFromName  String?
+  domainHint     String?
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+}
+
+model Credential {
+  id             String    @id @default(cuid())
+  tenantId       String
+  environment    String // SANDBOX | PRODUCTION
+  label          String
+  encryptedBlob  String // stub: base64 of JSON secrets — never return to browser after save
+  lastRotatedAt  DateTime?
+  createdAt      DateTime  @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+}
+
+model Party {
+  id           String   @id @default(cuid())
+  tenantId     String
+  type         String // CUSTOMER | SUPPLIER
+  name         String
+  tin          String?
+  email        String?
+  phone        String?
+  addressLine1 String?
+  city         String?
+  state        String?
+  lga          String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  tenant   Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  invoices Invoice[]
+}
+
+model Invoice {
+  id              String    @id @default(cuid())
+  tenantId        String
+  partyId         String?
+  documentType    String    @default("INVOICE") // INVOICE | CREDIT_NOTE | DEBIT_NOTE
+  invoiceKind     String    @default("B2B") // B2B | B2C | B2G
+  invoiceNumber   String
+  issueDate       DateTime  @default(now())
+  currency        String    @default("NGN")
+  status          String    @default("DRAFT") // DRAFT | SUBMITTED | VALID | INVALID | CANCELED
+  irn             String?
+  qrPayload       String?
+  qrSvg           String?
+  mockClearanceAt DateTime?
+  validationMsg   String?
+  notes           String?
+  relatedInvoiceId String?
+  subtotal        Float     @default(0)
+  vatTotal        Float     @default(0)
+  grandTotal      Float     @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  tenant         Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  party          Party?         @relation(fields: [partyId], references: [id])
+  relatedInvoice Invoice?       @relation("InvoiceAdjustments", fields: [relatedInvoiceId], references: [id])
+  adjustments    Invoice[]      @relation("InvoiceAdjustments")
+  lines          InvoiceLine[]
+  events         ClearanceEvent[]
+
+  @@unique([tenantId, invoiceNumber])
+  @@index([tenantId, status])
+}
+
+model InvoiceLine {
+  id          String  @id @default(cuid())
+  invoiceId   String
+  description String
+  quantity    Float
+  unitPrice   Float
+  vatRate     Float   @default(7.5)
+  lineTotal   Float
+  vatAmount   Float
+  hsnCode     String?
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}
+
+model ClearanceEvent {
+  id        String   @id @default(cuid())
+  invoiceId String
+  status    String
+  message   String?
+  createdAt DateTime @default(now())
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}
+
+model AuditEvent {
+  id        String   @id @default(cuid())
+  tenantId  String
+  userId    String?
+  action    String
+  entity    String?
+  entityId  String?
+  meta      String?
+  createdAt DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user   User?  @relation(fields: [userId], references: [id])
+}
