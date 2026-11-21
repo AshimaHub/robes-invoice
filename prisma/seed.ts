@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import QRCode from "qrcode";
 
 const prisma = new PrismaClient();
 
@@ -80,6 +81,27 @@ async function main() {
     },
   });
 
+  const gateAnswers = JSON.stringify({
+    einvoice_enabled: "yes",
+    tin_registered: "yes",
+    business_service_id: "yes",
+    credentials_ready: "yes",
+    env_awareness: "yes",
+    more_to_follow: "unsure",
+  });
+
+  for (const userId of [admin.id, issuer.id]) {
+    await prisma.nrsGateProgress.create({
+      data: {
+        tenantId: tenant.id,
+        userId,
+        answersJson: gateAnswers,
+        completed: true,
+        completedAt: new Date(),
+      },
+    });
+  }
+
   const party = await prisma.party.create({
     data: {
       tenantId: tenant.id,
@@ -87,10 +109,117 @@ async function main() {
       name: "Lagos Wholesale Mart",
       tin: "87654321-0001",
       email: "ap@lagoswholesale.demo",
+      phone: "+234 801 000 0000",
       addressLine1: "45 Trade Fair Complex",
       city: "Lagos",
       state: "Lagos",
       lga: "Ojo",
+    },
+  });
+
+  const issueDate = new Date("2025-01-26T09:42:31.000Z");
+  const lines = [
+    {
+      description: "Reservation of Name",
+      quantity: 1,
+      unitPrice: 1000,
+      vatRate: 7.5,
+      lineTotal: 1000,
+      vatAmount: 75,
+    },
+    {
+      description: "Business Name Registration (demo line)",
+      quantity: 1,
+      unitPrice: 500,
+      vatRate: 7.5,
+      lineTotal: 500,
+      vatAmount: 37.5,
+    },
+  ];
+  const subtotal = 1500;
+  const vatTotal = 112.5;
+  const grandTotal = 1612.5;
+  const invoiceNumber = "INV-00001";
+  const ymd = "20250126";
+  const irn = `${invoiceNumber}-${tenant.serviceId}-${ymd}`;
+  const qrPayload = JSON.stringify({
+    irn,
+    tin: tenant.tin,
+    amount: grandTotal,
+    currency: "NGN",
+    mode: "MOCK_SANDBOX",
+    verifiedAt: issueDate.toISOString(),
+  });
+  const qrSvg = await QRCode.toString(qrPayload, {
+    type: "svg",
+    margin: 1,
+    width: 180,
+    color: { dark: "#143D2B", light: "#FFFFFF" },
+  });
+
+  const nrsInvoice = await prisma.invoice.create({
+    data: {
+      tenantId: tenant.id,
+      partyId: party.id,
+      channel: "NRS",
+      documentType: "INVOICE",
+      invoiceKind: "B2B",
+      invoiceNumber,
+      issueDate,
+      status: "VALID",
+      irn,
+      qrPayload,
+      qrSvg,
+      mockClearanceAt: issueDate,
+      validationMsg: "Mock clearance accepted (sandbox simulator — not live NRS).",
+      notes: "Seeded demo cleared NRS e-invoice for document view.",
+      subtotal,
+      vatTotal,
+      grandTotal,
+      lines: { create: lines },
+      events: {
+        create: [
+          {
+            status: "SUBMITTED",
+            message: "Submitted to MockNrsAdapter (not live NRS).",
+            createdAt: new Date(issueDate.getTime() - 1000),
+          },
+          {
+            status: "VALID",
+            message: "Mock clearance accepted (sandbox simulator — not live NRS).",
+            createdAt: issueDate,
+          },
+        ],
+      },
+    },
+  });
+
+  await prisma.invoice.create({
+    data: {
+      tenantId: tenant.id,
+      partyId: party.id,
+      channel: "COMPANY",
+      documentType: "INVOICE",
+      invoiceKind: "B2B",
+      invoiceNumber: "CI-00001",
+      issueDate: new Date(),
+      status: "ISSUED",
+      notes: "Sample company invoice (commercial only).",
+      subtotal: 10000,
+      vatTotal: 750,
+      grandTotal: 10750,
+      lines: {
+        create: [
+          {
+            description: "Wholesale dry goods (company channel)",
+            quantity: 10,
+            unitPrice: 1000,
+            vatRate: 7.5,
+            lineTotal: 10000,
+            vatAmount: 750,
+          },
+        ],
+      },
     },
   });
 
@@ -101,13 +230,21 @@ async function main() {
       action: "SEED_DEMO_TENANT",
       entity: "Tenant",
       entityId: tenant.id,
-      meta: JSON.stringify({ issuerId: issuer.id, partyId: party.id }),
+      meta: JSON.stringify({
+        issuerId: issuer.id,
+        partyId: party.id,
+        nrsInvoiceId: nrsInvoice.id,
+        nrsInvoiceNumber: nrsInvoice.invoiceNumber,
+      }),
     },
   });
 
   console.log("Seeded Robes Invoice demo tenant (sample org: Acme Foods)");
   console.log("  Admin:  admin@acmefoods.demo / demo1234");
   console.log("  Issuer: issuer@acmefoods.demo / demo1234");
+  console.log("  NRS gate: completed for both users");
+  console.log(`  Cleared NRS invoice: ${nrsInvoice.invoiceNumber} id=${nrsInvoice.id}`);
+  console.log(`  View URL: /nrs/invoices/${nrsInvoice.id}/view`);
 }
 
 main()

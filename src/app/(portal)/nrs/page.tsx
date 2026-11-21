@@ -88,6 +88,9 @@ export default async function NrsHubPage({
           <Link href="/nrs/invoices" className="btn-secondary">
             Invoice library
           </Link>
+          <Link href="/nrs/invoices?status=VALID" className="btn-secondary">
+            View cleared
+          </Link>
           <Link href="/nrs/parties" className="btn-secondary">
             Parties
           </Link>

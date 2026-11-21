@@ -146,6 +146,8 @@ export default async function DashboardPage() {
                   inv.channel === "NRS"
                     ? `/nrs/invoices/${inv.id}`
                     : `/company/invoices/${inv.id}`;
+                const viewHref =
+                  inv.channel === "NRS" ? `/nrs/invoices/${inv.id}/view` : href;
                 return (
                   <li
                     key={inv.id}
@@ -153,7 +155,7 @@ export default async function DashboardPage() {
                   >
                     <div>
                       <Link
-                        href={href}
+                        href={viewHref}
                         className="font-semibold text-[color:var(--brand-accent)] hover:underline"
                       >
                         {inv.invoiceNumber}

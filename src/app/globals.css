@@ -105,3 +105,213 @@ body {
 .anim-pulse-once {
   animation: soft-pulse 1.2s ease-out 1;
 }
+
+/* —— Login motion background —— */
+.login-motion {
+  color: #e8f0ea;
+}
+
+.login-motif {
+  color: #dce8df;
+  will-change: transform, opacity;
+}
+
+.login-motif--fp {
+  animation: login-drift 22s ease-in-out infinite;
+}
+
+.login-motif--fp2 {
+  animation: login-drift-rev 26s ease-in-out infinite;
+}
+
+.login-motif--shield {
+  animation: login-float 16s ease-in-out infinite;
+}
+
+.login-motif--lock {
+  animation: login-float 18s ease-in-out infinite reverse;
+}
+
+.login-motif--scan {
+  animation: login-float 20s ease-in-out infinite;
+}
+
+.login-motif--badge {
+  animation: login-pulse-opacity 4.5s ease-in-out infinite;
+}
+
+.login-stroke {
+  stroke-dasharray: 180;
+  stroke-dashoffset: 0;
+  animation: login-draw 8s ease-in-out infinite;
+}
+
+.login-stroke--d1 {
+  animation-delay: 0.4s;
+}
+.login-stroke--d2 {
+  animation-delay: 0.8s;
+}
+.login-stroke--d3 {
+  animation-delay: 1.2s;
+}
+.login-stroke--d4 {
+  animation-delay: 1.6s;
+}
+.login-stroke--d5 {
+  animation-delay: 2s;
+}
+
+.login-check {
+  stroke-dasharray: 60;
+  stroke-dashoffset: 0;
+  animation: login-check-draw 3.2s ease-in-out infinite;
+}
+
+.login-ring--a {
+  animation: login-spin 18s linear infinite;
+  transform-origin: 70px 70px;
+}
+
+.login-ring--b {
+  animation: login-spin-rev 24s linear infinite;
+  transform-origin: 70px 70px;
+}
+
+.login-ring--c {
+  animation: login-spin 32s linear infinite;
+  transform-origin: 70px 70px;
+}
+
+.login-dot {
+  animation: login-pulse-opacity 2.8s ease-in-out infinite;
+}
+
+@keyframes login-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(-2deg);
+  }
+  50% {
+    transform: translate(18px, -12px) rotate(3deg);
+  }
+}
+
+@keyframes login-drift-rev {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(2deg);
+  }
+  50% {
+    transform: translate(-14px, 10px) rotate(-2deg);
+  }
+}
+
+@keyframes login-float {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-14px) scale(1.03);
+  }
+}
+
+@keyframes login-draw {
+  0%,
+  100% {
+    stroke-dashoffset: 40;
+    opacity: 0.55;
+  }
+  50% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes login-check-draw {
+  0%,
+  15% {
+    stroke-dashoffset: 60;
+    opacity: 0.35;
+  }
+  40%,
+  70% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0.55;
+  }
+}
+
+@keyframes login-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes login-spin-rev {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes login-pulse-opacity {
+  0%,
+  100% {
+    opacity: 0.12;
+  }
+  50% {
+    opacity: 0.28;
+  }
+}
+
+/* —— NRS fiscal document —— */
+.nrs-qr svg {
+  width: 140px;
+  height: 140px;
+  display: block;
+}
+
+.nrs-lines th:first-child,
+.nrs-lines td:first-child {
+  width: 3rem;
+}
+
+@media print {
+  .nrs-document-shell {
+    background: white !important;
+  }
+
+  .nrs-view-toolbar,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  .nrs-doc {
+    box-shadow: none !important;
+    max-width: none !important;
+  }
+
+  .nrs-doc-inner {
+    padding: 0 !important;
+  }
+
+  body {
+    background: white !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-motif,
+  .login-stroke,
+  .login-check,
+  .login-ring--a,
+  .login-ring--b,
+  .login-ring--c,
+  .login-dot {
+    animation: none !important;
+  }
+}

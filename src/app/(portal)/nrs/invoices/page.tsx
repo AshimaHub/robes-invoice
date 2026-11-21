@@ -74,12 +74,13 @@ export default async function NrsInvoicesPage({
               <th className="px-4 py-3">Total</th>
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3">IRN</th>
+              <th className="px-4 py-3">View</th>
             </tr>
           </thead>
           <tbody>
             {invoices.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-black/50">
+                <td colSpan={8} className="px-4 py-8 text-center text-black/50">
                   No NRS invoices yet.
                 </td>
               </tr>
@@ -103,6 +104,14 @@ export default async function NrsInvoicesPage({
                   </td>
                   <td className="max-w-[220px] truncate px-4 py-3 font-mono text-xs">
                     {inv.irn ?? "—"}
+                  </td>
+                  <td className="px-4 py-3">
+                    <Link
+                      href={`/nrs/invoices/${inv.id}/view`}
+                      className="font-semibold text-[color:var(--brand-primary)] hover:underline"
+                    >
+                      {inv.status === "VALID" ? "View e-Invoice" : "View"}
+                    </Link>
                   </td>
                 </tr>
               ))

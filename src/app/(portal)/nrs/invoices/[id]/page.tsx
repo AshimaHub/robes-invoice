@@ -89,7 +89,12 @@ export default async function NrsInvoiceDetailPage({
             {invoice.party?.name ?? "No party"}
           </p>
         </div>
-        <StatusBadge status={invoice.status} />
+        <div className="flex flex-wrap items-center gap-2">
+          <StatusBadge status={invoice.status} />
+          <Link href={`/nrs/invoices/${invoice.id}/view`} className="btn-primary">
+            View e-Invoice
+          </Link>
+        </div>
       </div>
 
       {sp.cleared ? (
