@@ -1,11 +1,12 @@
+import { cache } from "react";
 import { prisma } from "./prisma";
 
-export async function getTenantWithBranding(tenantId: string) {
+export const getTenantWithBranding = cache(async (tenantId: string) => {
   return prisma.tenant.findUnique({
     where: { id: tenantId },
     include: { branding: true },
   });
-}
+});
 
 export function brandingCssVars(branding: {
   primaryColor: string;

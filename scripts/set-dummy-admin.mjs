@@ -13,7 +13,7 @@ if (!existing) {
   const passwordHash = await bcrypt.hash("0000", 10);
   await prisma.user.update({
     where: { id: existing.id },
-    data: { email: "admin", passwordHash },
+    data: { email: "admin", name: "Admin", passwordHash },
   });
   console.log("Dummy admin login set");
 }

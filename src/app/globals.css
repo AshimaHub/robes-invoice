@@ -57,7 +57,21 @@ body {
   border-radius: 0.5rem;
   border: 1px solid color-mix(in srgb, var(--brand-accent) 22%, transparent);
   background: white;
+  color: #1a2a22;
+  -webkit-text-fill-color: #1a2a22;
+  caret-color: #1a2a22;
   padding: 0.55rem 0.75rem;
+}
+
+.field:-webkit-autofill,
+.field:-webkit-autofill:hover,
+.field:-webkit-autofill:focus {
+  -webkit-text-fill-color: #1a2a22;
+  caret-color: #1a2a22;
+}
+
+.field-password {
+  padding-right: 2.75rem;
 }
 
 .field:focus {
@@ -96,6 +110,52 @@ body {
 
 .anim-rise {
   animation: rise-in 0.45s ease-out both;
+}
+
+@keyframes loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loader-spin {
+  animation: loader-spin 0.7s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader-spin {
+    animation: none;
+  }
+}
+
+@keyframes gate-slide-forward {
+  from {
+    opacity: 0;
+    transform: translateX(56px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes gate-slide-back {
+  from {
+    opacity: 0;
+    transform: translateX(-56px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.gate-slide-forward {
+  animation: gate-slide-forward 0.32s ease both;
+}
+
+.gate-slide-back {
+  animation: gate-slide-back 0.32s ease both;
 }
 
 .anim-rise-delay {
@@ -338,8 +398,16 @@ body {
 
   .nrs-view-toolbar,
   .company-view-toolbar,
+  .demo-clearance-chrome,
   .print\:hidden {
     display: none !important;
+  }
+
+  .demo-clearance-panel {
+    background: white !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
   }
 
   .nrs-doc,

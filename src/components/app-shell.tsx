@@ -5,8 +5,7 @@ import { AuthMotifBackground } from "@/components/auth-motif-background";
 
 const primaryNav = [
   { href: "/dashboard", label: "Dashboard" },
-  { href: "/company/invoices", label: "Generate Company invoice" },
-  { href: "/nrs", label: "NRS Compliant e-Invoice" },
+  { href: "/nrs/gate", label: "NRS Compliant e-Invoice" },
 ];
 
 export function AppShell({
@@ -42,7 +41,7 @@ export function AppShell({
     >
       <AuthMotifBackground variant="app" />
       <header
-        className="relative z-10 border-b border-black/10"
+        className="relative z-10 border-b border-black/10 print:hidden"
         style={{ background: "color-mix(in srgb, var(--brand-accent) 92%, black)" }}
       >
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-3 text-white">
@@ -95,7 +94,7 @@ export function AppShell({
         </nav>
       </header>
       <main className="relative z-10 mx-auto max-w-6xl px-4 py-8">{children}</main>
-      <footer className="relative z-10 mx-auto max-w-6xl px-4 pb-8 text-xs text-black/50">
+      <footer className="relative z-10 mx-auto max-w-6xl px-4 pb-8 text-xs text-black/50 print:hidden">
         Robes Invoice — company invoicing plus optional NRS mock clearance (not live Nigeria
         Revenue Service submission).
       </footer>

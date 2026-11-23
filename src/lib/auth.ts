@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
+import { cache } from "react";
 import { prisma } from "./prisma";
 
 /** Bumped to invalidate cookies left over from DB reseed/migrate. */
@@ -46,15 +47,26 @@ export async function clearSessionCookie() {
   }
 }
 
-async function sessionStillValid(session: SessionUser): Promise<boolean> {
+async function sessionStillValid(session: SessionUser): Promise<SessionUser | null> {
   const membership = await prisma.membership.findFirst({
     where: {
       userId: session.userId,
       tenantId: session.tenantId,
     },
-    select: { id: true },
+    include: {
+      user: { select: { name: true, email: true } },
+      tenant: { select: { name: true, slug: true } },
+    },
   });
-  return membership != null;
+  if (!membership) return null;
+  return {
+    ...session,
+    name: membership.user.name,
+    email: membership.user.email,
+    role: membership.role,
+    tenantName: membership.tenant.name,
+    tenantSlug: membership.tenant.slug,
+  };
 }
 
 /**
@@ -62,7 +74,7 @@ async function sessionStillValid(session: SessionUser): Promise<boolean> {
  * Stale cookies (missing user/tenant after reseed) return null.
  * Legacy cookie names are ignored so they cannot keep a dead session alive.
  */
-export async function getSession(): Promise<SessionUser | null> {
+export const getSession = cache(async (): Promise<SessionUser | null> => {
   const jar = await cookies();
   const raw = jar.get(SESSION_COOKIE)?.value;
   if (!raw) return null;
@@ -70,11 +82,8 @@ export async function getSession(): Promise<SessionUser | null> {
   const decoded = decodeSession(raw);
   if (!decoded) return null;
 
-  const valid = await sessionStillValid(decoded);
-  if (!valid) return null;
-
-  return decoded;
-}
+  return sessionStillValid(decoded);
+});
 
 async function hasStaleOrLegacyCookie(): Promise<boolean> {
   const jar = await cookies();

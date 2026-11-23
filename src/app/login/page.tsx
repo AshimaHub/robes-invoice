@@ -8,6 +8,7 @@ import {
   SESSION_COOKIE,
 } from "@/lib/auth";
 import { AuthMotifBackground } from "@/components/auth-motif-background";
+import { PasswordField } from "@/components/password-field";
 
 export const instant = false;
 
@@ -56,7 +57,7 @@ export default async function LoginPage({
     >
       <AuthMotifBackground variant="login" />
 
-      <div className="anim-rise relative z-10 w-full max-w-md rounded-2xl bg-[#f7f4ec] p-8 shadow-xl shadow-black/30">
+      <div className="anim-rise relative z-10 w-full max-w-md rounded-2xl bg-[#f7f4ec] p-8 text-[#1a2a22] shadow-xl shadow-black/30">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--brand-primary)]">
           Robes
         </p>
@@ -84,7 +85,7 @@ export default async function LoginPage({
               type="text"
               required
               defaultValue="admin"
-              className="field"
+              className="field text-[#1a2a22]"
               autoComplete="username"
             />
           </div>
@@ -92,15 +93,7 @@ export default async function LoginPage({
             <label className="label" htmlFor="password">
               Password
             </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              defaultValue="0000"
-              className="field"
-              autoComplete="current-password"
-            />
+            <PasswordField defaultValue="0000" />
           </div>
           <button type="submit" className="btn-primary w-full anim-pulse-once">
             Sign in

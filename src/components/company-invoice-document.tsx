@@ -133,6 +133,14 @@ export function CompanyInvoiceDocument({
               Status
             </p>
             <p className="mt-2 text-sm font-semibold text-[#143d2b]">{invoice.status}</p>
+            {invoice.irn ? (
+              <>
+                <p className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-[#0b5e3c]">
+                  IRN
+                </p>
+                <p className="mt-1 break-all font-mono text-xs text-[#143d2b]">{invoice.irn}</p>
+              </>
+            ) : null}
             {invoice.paymentTerms ? (
               <>
                 <p className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-[#0b5e3c]">
@@ -211,7 +219,9 @@ export function CompanyInvoiceDocument({
         ) : null}
 
         <footer className="mt-10 border-t border-black/8 pt-4 text-xs text-black/45">
-          Commercial invoice generated with Robes Invoice. This is not an NRS-cleared e-invoice.
+          {invoice.irn
+            ? "Demo copy. The IRN is a showcase receipt, not a live Nigeria Revenue Service submission."
+            : "Commercial invoice generated with Robes Invoice. This is not an NRS-cleared e-invoice."}
         </footer>
       </div>
     </article>

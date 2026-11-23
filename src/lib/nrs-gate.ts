@@ -9,10 +9,9 @@ export type GateQuestion = {
   help?: string;
   /** Must be answered "yes" to pass the gate */
   requireYes: boolean;
-  placeholder?: boolean;
 };
 
-/** Known NRS readiness questions + placeholders for follow-up from the user. */
+/** Questions a client answers before Robes sets up NRS e-invoicing. */
 export const NRS_GATE_QUESTIONS: GateQuestion[] = [
   {
     id: "einvoice_enabled",
@@ -43,13 +42,6 @@ export const NRS_GATE_QUESTIONS: GateQuestion[] = [
     prompt: "Do you understand sandbox vs production, and that this app currently uses mock clearance only?",
     help: "Confirm you will not treat mock IRN/QR as live fiscalisation.",
     requireYes: true,
-  },
-  {
-    id: "more_to_follow",
-    prompt: "Additional NRS readiness checks (to be completed with your advisor)",
-    help: "Placeholder — more prerequisite questions will be added as requirements are confirmed.",
-    requireYes: false,
-    placeholder: true,
   },
 ];
 

@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { InvoiceLineItems } from "@/components/invoice-line-items";
 import { requireSession } from "@/lib/auth";
 import { createCompanyInvoice } from "@/lib/invoices";
 import { prisma } from "@/lib/prisma";
@@ -63,6 +64,7 @@ async function createInvoiceAction(formData: FormData) {
     }))
     .filter((l) => l.description && l.quantity > 0);
 
+  const demoQuery = formData.get("demo") === "1" ? "&demo=1" : "";
   const branding = await prisma.branding.findUnique({
     where: { tenantId: session.tenantId },
   });
@@ -73,11 +75,12 @@ async function createInvoiceAction(formData: FormData) {
       logoUrl = await saveTenantLogo(session.tenantId, logoFile);
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Logo upload failed";
-      redirect(`/company/invoices/new?error=${encodeURIComponent(msg)}`);
+      redirect(`/company/invoices/new?error=${encodeURIComponent(msg)}${demoQuery}`);
     }
   }
 
   let invoiceId: string;
+  let demoPath: string | null = null;
   try {
     const invoice = await createCompanyInvoice({
       tenantId: session.tenantId,
@@ -98,11 +101,26 @@ async function createInvoiceAction(formData: FormData) {
       lines,
     });
     invoiceId = invoice.id;
+    if (formData.get("demo") === "1") {
+      const issued = invoice.issueDate;
+      const y = issued.getFullYear();
+      const m = String(issued.getMonth() + 1).padStart(2, "0");
+      const d = String(issued.getDate()).padStart(2, "0");
+      await prisma.invoice.update({
+        where: { id: invoice.id },
+        data: {
+          irn: `${invoice.invoiceNumber}-DEMO-${y}${m}${d}`,
+          validationMsg: "Demo validation passed. Not a live NRS submission.",
+          mockClearanceAt: new Date(),
+        },
+      });
+      demoPath = `/company/invoices/${invoice.id}/demo`;
+    }
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Failed to create invoice";
-    redirect(`/company/invoices/new?error=${encodeURIComponent(msg)}`);
+    redirect(`/company/invoices/new?error=${encodeURIComponent(msg)}${demoQuery}`);
   }
-  redirect(`/company/invoices/${invoiceId}/view`);
+  redirect(demoPath ?? `/company/invoices/${invoiceId}/view`);
 }
 
 export const instant = false;
@@ -110,10 +128,11 @@ export const instant = false;
 export default async function NewCompanyInvoicePage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; demo?: string }>;
 }) {
   const session = await requireSession();
   const params = await searchParams;
+  const demo = params.demo === "1";
   const [parties, tenant, branding] = await Promise.all([
     prisma.party.findMany({
       where: { tenantId: session.tenantId, type: "CUSTOMER" },
@@ -141,14 +160,15 @@ export default async function NewCompanyInvoicePage({
     <div className="mx-auto max-w-4xl space-y-6">
       <div>
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--brand-primary)]">
-          Generate Company invoice
+          {demo ? "NRS demo" : "Generate Company invoice"}
         </p>
         <h1 className="font-display mt-1 text-3xl text-[color:var(--brand-accent)]">
           New company invoice
         </h1>
         <p className="mt-2 text-sm text-black/60">
-          Standard printable commercial invoice for your business. Not NRS clearance — use NRS
-          Compliant e-Invoice for that path.
+          {demo
+            ? "Demo only. NRS setup is not confirmed, so this uses the same manual invoice as a company bill: seller, buyer, dates, and line items."
+            : "Standard printable commercial invoice for your business. Not NRS clearance — use NRS Compliant e-Invoice for that path."}
         </p>
       </div>
 
@@ -159,6 +179,7 @@ export default async function NewCompanyInvoicePage({
       ) : null}
 
       <form action={createInvoiceAction} className="panel space-y-6 p-5" encType="multipart/form-data">
+        {demo ? <input type="hidden" name="demo" value="1" /> : null}
         <section className="space-y-4">
           <h2 className="font-display text-lg text-[color:var(--brand-accent)]">
             Your company (seller)
@@ -221,27 +242,6 @@ export default async function NewCompanyInvoicePage({
                 className="field"
                 defaultValue={tenant.tin}
               />
-            </div>
-            <div>
-              <label className="label" htmlFor="logo">
-                Company logo
-              </label>
-              <input
-                id="logo"
-                name="logo"
-                type="file"
-                accept="image/png,image/jpeg,image/webp,image/gif"
-                className="field file:mr-3 file:rounded file:border-0 file:bg-[color:var(--brand-primary)] file:px-2 file:py-1 file:text-xs file:font-semibold file:text-white"
-              />
-              {branding?.logoUrl ? (
-                <p className="mt-1 text-xs text-black/50">
-                  Current logo on file will be used if you do not upload a new one.
-                </p>
-              ) : (
-                <p className="mt-1 text-xs text-black/50">
-                  Optional. Stored locally under public/uploads for this tenant.
-                </p>
-              )}
             </div>
           </div>
         </section>
@@ -377,59 +377,7 @@ export default async function NewCompanyInvoicePage({
           </div>
         </section>
 
-        <section className="space-y-3">
-          <h2 className="font-display text-lg text-[color:var(--brand-accent)]">Line items</h2>
-          <div className="space-y-3">
-            {[0, 1, 2].map((i) => (
-              <div key={i} className="grid gap-2 rounded-lg bg-white/70 p-3 sm:grid-cols-12">
-                <div className="sm:col-span-5">
-                  <input
-                    name="description"
-                    className="field"
-                    placeholder="Description"
-                    defaultValue={i === 0 ? "Consulting services" : ""}
-                    required={i === 0}
-                  />
-                </div>
-                <div className="sm:col-span-2">
-                  <input
-                    name="quantity"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    className="field"
-                    placeholder="Qty"
-                    defaultValue={i === 0 ? "1" : ""}
-                    required={i === 0}
-                  />
-                </div>
-                <div className="sm:col-span-3">
-                  <input
-                    name="unitPrice"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    className="field"
-                    placeholder="Unit price"
-                    defaultValue={i === 0 ? "150000" : ""}
-                    required={i === 0}
-                  />
-                </div>
-                <div className="sm:col-span-2">
-                  <input
-                    name="vatRate"
-                    type="number"
-                    min="0"
-                    step="0.1"
-                    className="field"
-                    placeholder="VAT %"
-                    defaultValue="7.5"
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        <InvoiceLineItems />
 
         <section className="grid gap-4 sm:grid-cols-2">
           <div>
@@ -458,25 +406,51 @@ export default async function NewCompanyInvoicePage({
           </div>
         </section>
 
-        <label className="flex items-start gap-3 rounded-lg bg-white/70 p-3 text-sm">
+        <section className="space-y-2">
+          <h2 className="font-display text-lg text-[color:var(--brand-accent)]">Company logo</h2>
+          <label className="label" htmlFor="logo">
+            Upload logo
+          </label>
           <input
-            type="checkbox"
-            name="includeQr"
-            className="mt-1 h-4 w-4 accent-[color:var(--brand-primary)]"
+            id="logo"
+            name="logo"
+            type="file"
+            accept="image/png,image/jpeg,image/webp,image/gif"
+            className="field file:mr-3 file:rounded file:border-0 file:bg-[color:var(--brand-primary)] file:px-2 file:py-1 file:text-xs file:font-semibold file:text-white"
           />
-          <span>
-            <span className="font-semibold text-[color:var(--brand-accent)]">
-              Include QR on invoice
+          {branding?.logoUrl ? (
+            <p className="text-xs text-black/50">
+              Current logo on file will be used if you do not upload a new one.
+            </p>
+          ) : (
+            <p className="text-xs text-black/50">
+              Optional. Stored locally under public/uploads for this tenant.
+            </p>
+          )}
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="font-display text-lg text-[color:var(--brand-accent)]">QR</h2>
+          <label className="flex items-start gap-3 rounded-lg bg-white/70 p-3 text-sm">
+            <input
+              type="checkbox"
+              name="includeQr"
+              className="mt-1 h-4 w-4 accent-[color:var(--brand-primary)]"
+            />
+            <span>
+              <span className="font-semibold text-[color:var(--brand-accent)]">
+                Include QR on invoice
+              </span>
+              <span className="mt-0.5 block text-black/55">
+                When checked, a QR code encoding structured invoice JSON (number, dates, seller,
+                buyer, totals, lines) is printed on the document. Leave unchecked for no QR.
+              </span>
             </span>
-            <span className="mt-0.5 block text-black/55">
-              When checked, a QR code encoding structured invoice JSON (number, dates, seller,
-              buyer, totals, lines) is printed on the document. Leave unchecked for no QR.
-            </span>
-          </span>
-        </label>
+          </label>
+        </section>
 
         <button type="submit" className="btn-primary">
-          Create &amp; view invoice
+          {demo ? "Create" : "Create & view invoice"}
         </button>
       </form>
     </div>

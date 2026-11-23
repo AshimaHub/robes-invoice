@@ -66,7 +66,7 @@ async function main() {
   const admin = await prisma.user.create({
     data: {
       email: "admin",
-      name: "Ada Okonkwo",
+      name: "Admin",
       passwordHash: adminPasswordHash,
       memberships: {
         create: { tenantId: tenant.id, role: "TENANT_ADMIN" },
@@ -91,20 +91,17 @@ async function main() {
     business_service_id: "yes",
     credentials_ready: "yes",
     env_awareness: "yes",
-    more_to_follow: "unsure",
   });
 
-  for (const userId of [admin.id, issuer.id]) {
-    await prisma.nrsGateProgress.create({
-      data: {
-        tenantId: tenant.id,
-        userId,
-        answersJson: gateAnswers,
-        completed: true,
-        completedAt: new Date(),
-      },
-    });
-  }
+  await prisma.nrsGateProgress.create({
+    data: {
+      tenantId: tenant.id,
+      userId: issuer.id,
+      answersJson: gateAnswers,
+      completed: true,
+      completedAt: new Date(),
+    },
+  });
 
   const party = await prisma.party.create({
     data: {
@@ -298,7 +295,7 @@ async function main() {
   console.log("Seeded Robes Invoice demo tenant (sample org: Acme Foods)");
   console.log("  Admin:  admin / 0000");
   console.log("  Issuer: issuer@acmefoods.demo / demo1234");
-  console.log("  NRS gate: completed for both users");
+  console.log("  NRS gate: admin starts on the compliance questions");
   console.log(`  Cleared NRS invoice: ${nrsInvoice.invoiceNumber} id=${nrsInvoice.id}`);
   console.log(`  NRS view: /nrs/invoices/${nrsInvoice.id}/view`);
   console.log(

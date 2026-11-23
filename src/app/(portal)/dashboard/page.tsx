@@ -76,18 +76,15 @@ export default async function DashboardPage() {
           Dashboard
         </p>
         <h1 className="font-display mt-1 text-3xl text-[color:var(--brand-accent)]">
-          Welcome, {session.name.split(" ")[0]}
+          Welcome {session.name.split(" ")[0]}
         </h1>
         <p className="mt-2 max-w-2xl text-sm text-black/65">
-          Robes Invoice overview for {session.tenantName}. Create company invoices anytime;
-          complete the NRS gate before fiscal mock clearance.
+          Robes Invoice for {session.tenantName}. Company invoices are ready now. NRS e-Invoice
+          opens the compliance questions we use to set a client up for NRS e-invoicing.
         </p>
         <div className="mt-4 flex flex-wrap gap-3">
-          <Link href="/company/invoices/new" className="btn-primary">
-            Generate Company invoice
-          </Link>
-          <Link href={gate.completed ? "/nrs/invoices/new" : "/nrs/gate"} className="btn-secondary">
-            {gate.completed ? "NRS e-Invoice" : "Continue NRS setup"}
+          <Link href="/nrs/gate" className="btn-primary">
+            NRS e-Invoice
           </Link>
         </div>
       </section>
