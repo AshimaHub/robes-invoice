@@ -76,14 +76,14 @@ export default async function LoginPage({
         <form action={loginAction} className="mt-6 space-y-4">
           <div>
             <label className="label" htmlFor="email">
-              Email
+              Username
             </label>
             <input
               id="email"
               name="email"
-              type="email"
+              type="text"
               required
-              defaultValue="admin@acmefoods.demo"
+              defaultValue="admin"
               className="field"
               autoComplete="username"
             />
@@ -97,7 +97,7 @@ export default async function LoginPage({
               name="password"
               type="password"
               required
-              defaultValue="demo1234"
+              defaultValue="0000"
               className="field"
               autoComplete="current-password"
             />
@@ -111,7 +111,7 @@ export default async function LoginPage({
           <p className="font-semibold text-[color:var(--brand-accent)]">
             Robes Invoice demo accounts
           </p>
-          <p className="mt-1">admin@acmefoods.demo / demo1234 (Tenant Admin)</p>
+          <p className="mt-1">admin / 0000 (Tenant Admin)</p>
           <p>issuer@acmefoods.demo / demo1234 (Issuer)</p>
           <p className="mt-2 italic">Demo tenant data only — product brand is Robes Invoice.</p>
         </div>

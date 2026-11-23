@@ -17,7 +17,8 @@ async function main() {
   await prisma.user.deleteMany();
   await prisma.tenant.deleteMany();
 
-  const passwordHash = await bcrypt.hash("demo1234", 10);
+  const adminPasswordHash = await bcrypt.hash("0000", 10);
+  const issuerPasswordHash = await bcrypt.hash("demo1234", 10);
 
   const tenant = await prisma.tenant.create({
     data: {
@@ -64,9 +65,9 @@ async function main() {
 
   const admin = await prisma.user.create({
     data: {
-      email: "admin@acmefoods.demo",
+      email: "admin",
       name: "Ada Okonkwo",
-      passwordHash,
+      passwordHash: adminPasswordHash,
       memberships: {
         create: { tenantId: tenant.id, role: "TENANT_ADMIN" },
       },
@@ -77,7 +78,7 @@ async function main() {
     data: {
       email: "issuer@acmefoods.demo",
       name: "Chidi Eze",
-      passwordHash,
+      passwordHash: issuerPasswordHash,
       memberships: {
         create: { tenantId: tenant.id, role: "ISSUER" },
       },
@@ -295,7 +296,7 @@ async function main() {
   });
 
   console.log("Seeded Robes Invoice demo tenant (sample org: Acme Foods)");
-  console.log("  Admin:  admin@acmefoods.demo / demo1234");
+  console.log("  Admin:  admin / 0000");
   console.log("  Issuer: issuer@acmefoods.demo / demo1234");
   console.log("  NRS gate: completed for both users");
   console.log(`  Cleared NRS invoice: ${nrsInvoice.invoiceNumber} id=${nrsInvoice.id}`);

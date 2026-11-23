@@ -19,7 +19,7 @@ This build uses **MockNrsAdapter** for NRS only. It does **not** submit to live 
 
 | Role | Email | Password |
 | --- | --- | --- |
-| Tenant Admin | `admin@acmefoods.demo` | `demo1234` |
+| Tenant Admin | `admin` | `0000` |
 | Issuer | `issuer@acmefoods.demo` | `demo1234` |
 
 ## Start

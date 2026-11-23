@@ -113,11 +113,11 @@ export async function loginWithPassword(
   });
 
   if (!user || user.memberships.length === 0) {
-    return { ok: false, error: "Invalid email or password." };
+    return { ok: false, error: "Invalid username or password." };
   }
 
   const valid = await bcrypt.compare(password, user.passwordHash);
-  if (!valid) return { ok: false, error: "Invalid email or password." };
+  if (!valid) return { ok: false, error: "Invalid username or password." };
 
   const membership = user.memberships[0];
   const session: SessionUser = {

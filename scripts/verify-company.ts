@@ -8,7 +8,7 @@ async function main() {
       where: { slug: "acme-foods" },
     });
     const user = await prisma.user.findUniqueOrThrow({
-      where: { email: "admin@acmefoods.demo" },
+      where: { email: "admin" },
     });
     const party = await prisma.party.findFirstOrThrow({
       where: { tenantId: tenant.id },

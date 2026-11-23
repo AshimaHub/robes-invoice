@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   const user = await prisma.user.findUnique({
-    where: { email: "admin@acmefoods.demo" },
+    where: { email: "admin" },
     include: { memberships: { include: { tenant: true }, take: 1 } },
   });
   if (!user?.memberships[0]) throw new Error("demo user missing — run npm run db:seed");
