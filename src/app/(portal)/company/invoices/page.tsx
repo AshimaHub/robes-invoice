@@ -67,7 +67,7 @@ export default async function CompanyInvoicesPage({
       </div>
 
       <div className="panel overflow-x-auto">
-        <table className="min-w-full text-left text-sm">
+        <table className="min-w-full text-left text-xs sm:text-sm">
           <thead className="border-b border-black/10 text-xs uppercase tracking-wide text-black/50">
             <tr>
               <th className="px-4 py-3">Number</th>

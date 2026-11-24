@@ -57,7 +57,7 @@ export default async function LoginPage({
     >
       <AuthMotifBackground variant="login" />
 
-      <div className="anim-rise relative z-10 w-full max-w-md rounded-2xl bg-[#f7f4ec] p-8 text-[#1a2a22] shadow-xl shadow-black/30">
+      <div className="anim-rise relative z-10 w-full max-w-md rounded-2xl bg-[#f7f4ec] p-5 text-[#1a2a22] shadow-xl shadow-black/30 sm:p-8">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--brand-primary)]">
           Robes
         </p>

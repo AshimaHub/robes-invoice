@@ -225,7 +225,17 @@ export async function createAndClearInvoice(opts: {
   partyId?: string | null;
   invoiceKind?: string;
   documentType?: string;
+  invoiceNumber?: string | null;
+  issueDate?: Date;
+  dueDate?: Date | null;
+  currency?: string;
   notes?: string;
+  paymentTerms?: string | null;
+  seller?: CompanySellerInput;
+  buyer?: CompanyBuyerInput;
+  includeQr?: boolean;
+  logoUrl?: string | null;
+  persistBranding?: boolean;
   relatedInvoiceId?: string | null;
   lines: LineInput[];
 }) {
@@ -258,12 +268,36 @@ export async function createAndClearInvoice(opts: {
 
   const computed = computeLines(opts.lines);
   if (computed.length === 0) throw new Error("Add at least one line item.");
+  if (opts.seller && !opts.seller.name.trim()) throw new Error("Seller company name is required.");
+  if (opts.buyer && !opts.buyer.name.trim()) throw new Error("Buyer name is required.");
 
   const subtotal = Number(computed.reduce((s, l) => s + l.lineTotal, 0).toFixed(2));
   const vatTotal = Number(computed.reduce((s, l) => s + l.vatAmount, 0).toFixed(2));
   const grandTotal = Number((subtotal + vatTotal).toFixed(2));
-  const invoiceNumber = await nextInvoiceNumber(opts.tenantId, prefix);
-  const issueDate = new Date();
+  const invoiceNumber =
+    opts.invoiceNumber?.trim() || (await nextInvoiceNumber(opts.tenantId, prefix));
+  const issueDate = opts.issueDate ?? new Date();
+  const includeQr = opts.includeQr !== false;
+  const logoSnapshotUrl = opts.logoUrl || null;
+
+  if (opts.persistBranding && opts.seller) {
+    await prisma.branding.upsert({
+      where: { tenantId: opts.tenantId },
+      create: {
+        tenantId: opts.tenantId,
+        invoiceCompanyName: opts.seller.name.trim(),
+        invoicePhone: opts.seller.phone?.trim() || null,
+        invoiceEmail: opts.seller.email?.trim() || null,
+        logoUrl: logoSnapshotUrl,
+      },
+      update: {
+        invoiceCompanyName: opts.seller.name.trim(),
+        invoicePhone: opts.seller.phone?.trim() || null,
+        invoiceEmail: opts.seller.email?.trim() || null,
+        ...(logoSnapshotUrl ? { logoUrl: logoSnapshotUrl } : {}),
+      },
+    });
+  }
 
   const party = opts.partyId
     ? await prisma.party.findFirst({
@@ -280,8 +314,22 @@ export async function createAndClearInvoice(opts: {
       invoiceKind: opts.invoiceKind ?? "B2B",
       invoiceNumber,
       issueDate,
+      dueDate: opts.dueDate ?? null,
+      currency: opts.currency?.trim() || "NGN",
       status: "SUBMITTED",
-      notes: opts.notes || null,
+      notes: opts.notes?.trim() || null,
+      paymentTerms: opts.paymentTerms?.trim() || null,
+      sellerName: opts.seller?.name.trim() || null,
+      sellerAddress: opts.seller?.address?.trim() || null,
+      sellerPhone: opts.seller?.phone?.trim() || null,
+      sellerEmail: opts.seller?.email?.trim() || null,
+      sellerTin: opts.seller?.tin?.trim() || null,
+      buyerName: opts.buyer?.name.trim() || null,
+      buyerAddress: opts.buyer?.address?.trim() || null,
+      buyerEmail: opts.buyer?.email?.trim() || null,
+      buyerPhone: opts.buyer?.phone?.trim() || null,
+      includeQr,
+      logoSnapshotUrl,
       relatedInvoiceId: opts.relatedInvoiceId || null,
       subtotal,
       vatTotal,
@@ -318,8 +366,8 @@ export async function createAndClearInvoice(opts: {
     data: {
       status: result.status,
       irn: result.irn,
-      qrPayload: result.qrPayload,
-      qrSvg: result.qrSvg,
+      qrPayload: includeQr ? result.qrPayload : null,
+      qrSvg: includeQr ? result.qrSvg : null,
       mockClearanceAt: result.clearedAt,
       validationMsg: result.message,
       events: {

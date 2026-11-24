@@ -69,14 +69,14 @@ export default async function NrsInvoicesPage({
         <table className="min-w-full text-left text-sm">
           <thead className="border-b border-black/10 text-xs uppercase tracking-wide text-black/50">
             <tr>
-              <th className="px-4 py-3">Number</th>
-              <th className="px-4 py-3">Type</th>
-              <th className="px-4 py-3">Party</th>
-              <th className="px-4 py-3">Date</th>
-              <th className="px-4 py-3">Total</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">IRN</th>
-              <th className="px-4 py-3">View</th>
+              <th className="px-2 py-3 sm:px-4">Number</th>
+              <th className="hidden px-4 py-3 sm:table-cell">Type</th>
+              <th className="px-2 py-3 sm:px-4">Party</th>
+              <th className="hidden px-4 py-3 md:table-cell">Date</th>
+              <th className="px-2 py-3 sm:px-4">Total</th>
+              <th className="px-2 py-3 sm:px-4">Status</th>
+              <th className="hidden px-4 py-3 lg:table-cell">IRN</th>
+              <th className="px-2 py-3 sm:px-4">View</th>
             </tr>
           </thead>
           <tbody>
@@ -89,7 +89,7 @@ export default async function NrsInvoicesPage({
             ) : (
               invoices.map((inv) => (
                 <tr key={inv.id} className="border-b border-black/5 hover:bg-white/40">
-                  <td className="px-4 py-3">
+                  <td className="px-2 py-3 sm:px-4">
                     <Link
                       href={`/nrs/invoices/${inv.id}`}
                       className="font-semibold text-[color:var(--brand-primary)] hover:underline"
@@ -97,17 +97,17 @@ export default async function NrsInvoicesPage({
                       {inv.invoiceNumber}
                     </Link>
                   </td>
-                  <td className="px-4 py-3">{inv.documentType.replace("_", " ")}</td>
-                  <td className="px-4 py-3">{inv.party?.name ?? "—"}</td>
-                  <td className="px-4 py-3">{formatDate(inv.issueDate)}</td>
-                  <td className="px-4 py-3">{formatMoney(inv.grandTotal)}</td>
-                  <td className="px-4 py-3">
+                  <td className="hidden px-4 py-3 sm:table-cell">{inv.documentType.replace("_", " ")}</td>
+                  <td className="px-2 py-3 sm:px-4">{inv.party?.name ?? "—"}</td>
+                  <td className="hidden px-4 py-3 md:table-cell">{formatDate(inv.issueDate)}</td>
+                  <td className="px-2 py-3 sm:px-4">{formatMoney(inv.grandTotal)}</td>
+                  <td className="px-2 py-3 sm:px-4">
                     <StatusBadge status={inv.status} />
                   </td>
-                  <td className="max-w-[220px] truncate px-4 py-3 font-mono text-xs">
+                  <td className="hidden max-w-[220px] truncate px-4 py-3 font-mono text-xs lg:table-cell">
                     {inv.irn ?? "—"}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-2 py-3 sm:px-4">
                     <Link
                       href={`/nrs/invoices/${inv.id}/view`}
                       className="font-semibold text-[color:var(--brand-primary)] hover:underline"

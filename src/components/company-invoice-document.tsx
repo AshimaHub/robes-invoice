@@ -45,7 +45,7 @@ export function CompanyInvoiceDocument({
 
   return (
     <article className="company-doc mx-auto w-full max-w-[860px] bg-white text-[#1a2a22] shadow-lg print:shadow-none">
-      <div className="company-doc-inner p-7 sm:p-10">
+      <div className="company-doc-inner p-4 sm:p-10">
         <header className="flex flex-wrap items-start justify-between gap-6 border-b-2 border-[#0b5e3c] pb-6">
           <div className="flex min-w-0 flex-1 items-start gap-4">
             {invoice.logoSnapshotUrl ? (
@@ -153,7 +153,7 @@ export function CompanyInvoiceDocument({
         </section>
 
         <section className="mt-8 overflow-x-auto">
-          <table className="company-lines w-full min-w-[560px] border-collapse text-left text-sm">
+          <table className="company-lines w-full border-collapse text-left text-xs sm:text-sm">
             <thead>
               <tr className="border-b border-[#0b5e3c]/30 bg-[#0b5e3c]/08">
                 <th className="px-3 py-2.5 font-semibold text-[#143d2b]">#</th>
@@ -173,17 +173,23 @@ export function CompanyInvoiceDocument({
             <tbody>
               {invoice.lines.map((line, i) => (
                 <tr key={line.id} className="border-b border-black/8">
-                  <td className="px-3 py-2.5 text-black/50">{i + 1}</td>
-                  <td className="px-3 py-2.5">{line.description}</td>
-                  <td className="px-3 py-2.5 text-right tabular-nums">{line.quantity}</td>
-                  <td className="px-3 py-2.5 text-right tabular-nums">
+                  <td className="px-3 py-2.5 text-black/50" data-label="#">
+                    {i + 1}
+                  </td>
+                  <td className="px-3 py-2.5" data-label="Description">
+                    {line.description}
+                  </td>
+                  <td className="px-3 py-2.5 text-right tabular-nums" data-label="Qty">
+                    {line.quantity}
+                  </td>
+                  <td className="px-3 py-2.5 text-right tabular-nums" data-label="Unit price">
                     {money(line.unitPrice)}
                   </td>
-                  <td className="px-3 py-2.5 text-right tabular-nums">
+                  <td className="px-3 py-2.5 text-right tabular-nums" data-label="Tax / VAT">
                     {money(line.vatAmount)}
                     <span className="ml-1 text-xs text-black/45">({line.vatRate}%)</span>
                   </td>
-                  <td className="px-3 py-2.5 text-right tabular-nums font-medium">
+                  <td className="px-3 py-2.5 text-right tabular-nums font-medium" data-label="Line total">
                     {money(line.lineTotal)}
                   </td>
                 </tr>

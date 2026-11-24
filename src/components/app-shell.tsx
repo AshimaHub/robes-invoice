@@ -57,13 +57,13 @@ export function AppShell({
               <p className="font-[family-name:var(--font-display)] text-lg leading-tight">
                 Robes Invoice
               </p>
-              <p className="text-xs text-white/70">
+              <p className="text-xs text-white">
                 Robes · {session.tenantName}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-4 text-sm">
-            <span className="hidden text-white/80 sm:inline">
+            <span className="text-sm text-white">
               {session.name} · {session.role.replace("_", " ")}
             </span>
             <form
@@ -86,7 +86,7 @@ export function AppShell({
             <Link
               key={item.href}
               href={item.href}
-              className="whitespace-nowrap rounded-md px-3 py-1.5 text-sm text-white/85 hover:bg-white/10 hover:text-white"
+              className="whitespace-nowrap rounded-md px-3 py-1.5 text-sm text-white hover:bg-white/10"
             >
               {item.label}
             </Link>

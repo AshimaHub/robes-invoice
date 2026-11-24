@@ -77,6 +77,14 @@ export function NrsInvoiceDocument({
         {/* Header */}
         <header className="flex flex-wrap items-start justify-between gap-4 border-b border-[#e5e7eb] pb-5">
           <div className="flex items-center gap-3">
+            {invoice.logoSnapshotUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={invoice.logoSnapshotUrl}
+                alt=""
+                className="h-12 w-auto max-w-[120px] object-contain"
+              />
+            ) : null}
             <div className="nrs-logo" aria-hidden>
               <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
                 <circle cx="22" cy="22" r="21" fill="#E8F5E9" stroke="#006837" strokeWidth="1.5" />
@@ -110,7 +118,7 @@ export function NrsInvoiceDocument({
             <p className="text-sm font-bold text-[#111827]">
               Electronic Tax Invoice (e-Invoice)
             </p>
-            <p className="mt-0.5 max-w-[260px] text-xs text-[#6b7280]">
+            <p className="mt-0.5 max-w-[260px] text-xs text-[#1f2937]">
               Issued under the Nigeria Revenue Service (NRS) e-Invoicing System
             </p>
           </div>
@@ -162,15 +170,19 @@ export function NrsInvoiceDocument({
         {/* Seller / Buyer */}
         <div className="mt-5 grid gap-4 md:grid-cols-2">
           <section className="rounded-lg bg-[#f3f4f6] p-4 text-sm">
-            <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-[#6b7280]">
+            <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-[#1f2937]">
               Seller (Supplier)
             </h2>
-            <p className="font-bold text-[#111827]">{tenant.legalName || tenant.name}</p>
-            <p className="mt-1 text-[#4b5563]">{sellerAddress(tenant)}</p>
+            <p className="font-bold text-[#111827]">
+              {invoice.sellerName || tenant.legalName || tenant.name}
+            </p>
+            <p className="mt-1 whitespace-pre-line text-[#1f2937]">
+              {invoice.sellerAddress || sellerAddress(tenant)}
+            </p>
             <dl className="mt-3 space-y-1 text-[13px]">
               <div>
                 <dt className="inline font-semibold">Tax Identification No. (TIN): </dt>
-                <dd className="inline">{tenant.tin}</dd>
+                <dd className="inline">{invoice.sellerTin || tenant.tin}</dd>
               </div>
               <div>
                 <dt className="inline font-semibold">VAT Registration No.: </dt>
@@ -188,11 +200,15 @@ export function NrsInvoiceDocument({
           </section>
 
           <section className="rounded-lg bg-[#f3f4f6] p-4 text-sm">
-            <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-[#6b7280]">
+            <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-[#1f2937]">
               Buyer (Customer)
             </h2>
-            <p className="font-bold text-[#111827]">{invoice.party?.name ?? "Walk-in / Unspecified"}</p>
-            <p className="mt-1 text-[#4b5563]">{buyerAddress(invoice.party)}</p>
+            <p className="font-bold text-[#111827]">
+              {invoice.buyerName || invoice.party?.name || "Walk-in / Unspecified"}
+            </p>
+            <p className="mt-1 whitespace-pre-line text-[#1f2937]">
+              {invoice.buyerAddress || buyerAddress(invoice.party)}
+            </p>
             <dl className="mt-3 space-y-1 text-[13px]">
               <div>
                 <dt className="inline font-semibold">Tax Identification No. (TIN): </dt>
@@ -204,11 +220,11 @@ export function NrsInvoiceDocument({
               </div>
               <div>
                 <dt className="inline font-semibold">Email: </dt>
-                <dd className="inline">{invoice.party?.email ?? "—"}</dd>
+                <dd className="inline">{invoice.buyerEmail || invoice.party?.email || "—"}</dd>
               </div>
               <div>
                 <dt className="inline font-semibold">Phone: </dt>
-                <dd className="inline">{invoice.party?.phone ?? "—"}</dd>
+                <dd className="inline">{invoice.buyerPhone || invoice.party?.phone || "—"}</dd>
               </div>
             </dl>
           </section>
@@ -216,7 +232,7 @@ export function NrsInvoiceDocument({
 
         {/* Lines */}
         <div className="mt-6 overflow-x-auto">
-          <table className="nrs-lines w-full min-w-[640px] border-collapse text-sm">
+          <table className="nrs-lines w-full border-collapse text-xs sm:text-sm">
             <thead>
               <tr className="bg-[#006837] text-left text-white">
                 <th className="px-3 py-2.5 font-semibold">S/N</th>
@@ -230,22 +246,28 @@ export function NrsInvoiceDocument({
             <tbody>
               {invoice.lines.map((line, idx) => (
                 <tr key={line.id} className="border-b border-[#e5e7eb]">
-                  <td className="px-3 py-2.5">{idx + 1}</td>
-                  <td className="px-3 py-2.5">{line.description}</td>
-                  <td className="px-3 py-2.5 text-right">{line.quantity}</td>
-                  <td className="px-3 py-2.5 text-right tabular-nums">
+                  <td className="px-3 py-2.5" data-label="S/N">
+                    {idx + 1}
+                  </td>
+                  <td className="px-3 py-2.5" data-label="Description">
+                    {line.description}
+                  </td>
+                  <td className="px-3 py-2.5 text-right" data-label="Qty">
+                    {line.quantity}
+                  </td>
+                  <td className="px-3 py-2.5 text-right tabular-nums" data-label="Unit price">
                     {line.unitPrice.toLocaleString("en-NG", {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}
                   </td>
-                  <td className="px-3 py-2.5 text-right tabular-nums">
+                  <td className="px-3 py-2.5 text-right tabular-nums" data-label="VAT">
                     {line.vatAmount.toLocaleString("en-NG", {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}
                   </td>
-                  <td className="px-3 py-2.5 text-right tabular-nums font-medium">
+                  <td className="px-3 py-2.5 text-right tabular-nums font-medium" data-label="Subtotal">
                     {(line.lineTotal + line.vatAmount).toLocaleString("en-NG", {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
@@ -291,7 +313,7 @@ export function NrsInvoiceDocument({
                     <span aria-hidden>✓</span> Paid
                   </span>
                 ) : (
-                  <span className="text-[#6b7280]">Pending</span>
+                  <span className="text-[#1f2937]">Pending</span>
                 )}
               </p>
               <p>
@@ -315,6 +337,7 @@ export function NrsInvoiceDocument({
             </div>
           </section>
 
+          {invoice.includeQr || invoice.qrSvg ? (
           <section className="flex flex-wrap items-center gap-4 rounded-lg border border-[#e5e7eb] p-4">
             {invoice.qrSvg ? (
               <div
@@ -322,17 +345,18 @@ export function NrsInvoiceDocument({
                 dangerouslySetInnerHTML={{ __html: invoice.qrSvg }}
               />
             ) : (
-              <div className="flex h-[120px] w-[120px] items-center justify-center rounded border border-dashed border-[#cbd5e1] text-center text-xs text-[#9ca3af]">
+              <div className="flex h-[120px] w-[120px] items-center justify-center rounded border border-dashed border-[#cbd5e1] text-center text-xs text-[#374151]">
                 QR after clearance
               </div>
             )}
-            <p className="max-w-[200px] text-sm text-[#4b5563]">
+            <p className="max-w-[200px] text-sm text-[#1f2937]">
               Scan to verify this invoice on the NRS e-Invoice platform.
-              <span className="mt-1 block text-xs italic text-[#9ca3af]">
+              <span className="mt-1 block text-xs italic text-[#374151]">
                 Mock / demo QR — not live NRS verification.
               </span>
             </p>
           </section>
+          ) : null}
         </div>
 
         {/* Verification bar */}
@@ -345,19 +369,19 @@ export function NrsInvoiceDocument({
             <span className="font-mono font-bold text-[#006837]">{refCode}</span>
           </p>
           {invoice.irn ? (
-            <p className="mt-1 pl-8 font-mono text-xs text-[#4b5563]">IRN: {invoice.irn}</p>
+            <p className="mt-1 pl-8 font-mono text-xs text-[#1f2937]">IRN: {invoice.irn}</p>
           ) : null}
-          <p className="mt-1 pl-8 text-xs text-[#6b7280]">
+          <p className="mt-1 pl-8 text-xs text-[#1f2937]">
             Verify this invoice at https://e-invoice.nrs.gov.ng/verify using the reference code
             or by scanning the QR code.{" "}
-            <em className="text-[#9ca3af]">
+            <em className="text-[#374151]">
               (Illustrative link — Robes Invoice mock clearance only.)
             </em>
           </p>
         </div>
 
         {/* Fine print */}
-        <footer className="relative mt-6 border-t border-[#e5e7eb] pt-4 text-center text-xs text-[#6b7280]">
+        <footer className="relative mt-6 border-t border-[#e5e7eb] pt-4 text-center text-xs text-[#1f2937]">
           <p>This is a computer-generated e-invoice and is valid without a physical signature.</p>
           <p className="mt-1 font-medium text-[#b45309]">
             Sample / Illustrative — Robes Invoice demo mock. Not a live Nigeria Revenue Service

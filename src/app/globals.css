@@ -87,6 +87,17 @@ body {
   color: color-mix(in srgb, var(--brand-accent) 85%, black);
 }
 
+/* Explanatory copy was using translucent black, which washed out on the cream panels. */
+.text-black\/45,
+.text-black\/50,
+.text-black\/55,
+.text-black\/60,
+.text-black\/65,
+.text-black\/70,
+.text-black\/75 {
+  color: #1a2a22;
+}
+
 @keyframes rise-in {
   from {
     opacity: 0;
@@ -383,6 +394,86 @@ body {
   width: 120px;
   height: 120px;
   display: block;
+}
+
+@media (max-width: 639px) {
+  .company-lines thead,
+  .nrs-lines thead {
+    display: none;
+  }
+
+  .company-lines,
+  .company-lines tbody,
+  .company-lines tr,
+  .nrs-lines,
+  .nrs-lines tbody,
+  .nrs-lines tr {
+    display: block;
+    width: 100%;
+  }
+
+  .company-lines tr,
+  .nrs-lines tr {
+    margin-bottom: 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--brand-accent) 18%, transparent);
+    border-radius: 0.5rem;
+    padding: 0.35rem 0.7rem;
+  }
+
+  .company-lines td,
+  .nrs-lines td {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    width: auto;
+    padding: 0.25rem 0;
+    text-align: right;
+    border: none;
+  }
+
+  .company-lines td::before,
+  .nrs-lines td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    text-align: left;
+  }
+}
+
+@media print {
+  .company-lines,
+  .nrs-lines {
+    display: table;
+    width: 100%;
+  }
+
+  .company-lines thead,
+  .nrs-lines thead {
+    display: table-header-group;
+  }
+
+  .company-lines tbody,
+  .nrs-lines tbody {
+    display: table-row-group;
+  }
+
+  .company-lines tr,
+  .nrs-lines tr {
+    display: table-row;
+    margin: 0;
+    border: none;
+    padding: 0;
+  }
+
+  .company-lines td,
+  .nrs-lines td {
+    display: table-cell;
+    text-align: inherit;
+  }
+
+  .company-lines td::before,
+  .nrs-lines td::before {
+    content: none;
+  }
 }
 
 @media print {
