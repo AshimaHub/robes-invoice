@@ -69,7 +69,6 @@ export function AddSellerBuyer() {
   const [role, setRole] = useState("BUYER");
   const [draft, setDraft] = useState({
     name: "",
-    phone: "",
     email: "",
     tin: "",
     address: "",
@@ -85,7 +84,6 @@ export function AddSellerBuyer() {
     const formData = new FormData();
     formData.set("role", role);
     formData.set("name", name);
-    formData.set("phone", draft.phone.trim());
     formData.set("email", draft.email.trim());
     formData.set("tin", draft.tin.trim());
     formData.set("address", draft.address.trim());
@@ -96,15 +94,19 @@ export function AddSellerBuyer() {
       return;
     }
     remember(result.party);
-    setDraft({ name: "", phone: "", email: "", tin: "", address: "" });
+    setDraft({ name: "", email: "", tin: "", address: "" });
     setOpen(false);
-    setNotice(`${result.party.name} is saved. Choose that name in the company or buyer field, or type a different one.`);
+    setNotice(`${result.party.name} saved. Select it in Seller or Buyer, or type another name.`);
   }
 
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-3">
-        <button type="button" className="btn-secondary" onClick={() => setOpen((value) => !value)}>
+        <button
+          type="button"
+          className="btn-secondary px-3 py-2 text-sm"
+          onClick={() => setOpen((value) => !value)}
+        >
           Add Seller/Buyer
         </button>
         {notice ? <p className="text-sm text-[color:var(--brand-accent)]">{notice}</p> : null}
@@ -135,17 +137,6 @@ export function AddSellerBuyer() {
                 className="field"
                 value={draft.name}
                 onChange={(event) => setDraft((current) => ({ ...current, name: event.target.value }))}
-              />
-            </div>
-            <div>
-              <label className="label" htmlFor="newPartyPhone">
-                Phone
-              </label>
-              <input
-                id="newPartyPhone"
-                className="field"
-                value={draft.phone}
-                onChange={(event) => setDraft((current) => ({ ...current, phone: event.target.value }))}
               />
             </div>
             <div>
@@ -224,18 +215,16 @@ export function PartyNameField({
     if (!match) return;
     if (kind === "seller") {
       setField("sellerAddress", match.address);
-      setField("sellerPhone", match.phone ?? "");
       setField("sellerEmail", match.email ?? "");
       setField("sellerTin", match.tin ?? "");
       return;
     }
     setField("buyerAddress", match.address);
-    setField("buyerPhone", match.phone ?? "");
     setField("buyerEmail", match.email ?? "");
   }
 
   return (
-    <div className={kind === "seller" ? "sm:col-span-2" : undefined}>
+    <div>
       <label className="label" htmlFor={id}>
         {label}
       </label>
@@ -262,9 +251,6 @@ export function PartyNameField({
       {kind === "buyer" ? (
         <input type="hidden" id="partyId" name="partyId" defaultValue={defaultPartyId ?? ""} />
       ) : null}
-      <p className="mt-1 text-xs text-black/50">
-        Pick a saved party to fill the details, or type a name that is not on the list.
-      </p>
     </div>
   );
 }

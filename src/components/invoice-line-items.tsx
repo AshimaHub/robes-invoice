@@ -100,19 +100,14 @@ export function InvoiceLineItems() {
     <section className="space-y-3">
       <div className="flex items-center justify-between gap-3">
         <h2 className="font-display text-lg text-[color:var(--brand-accent)]">Line items</h2>
-        <button type="button" onClick={addRow} className="btn-secondary inline-flex items-center gap-2">
+        <button
+          type="button"
+          onClick={addRow}
+          className="btn-secondary inline-flex items-center gap-2"
+        >
           <PlusIcon />
           Add row
         </button>
-      </div>
-
-      <div className="hidden gap-2 px-3 text-xs font-semibold uppercase tracking-[0.12em] text-black/45 sm:grid sm:grid-cols-[7.5rem_minmax(0,1fr)_5.5rem_7.5rem_9.5rem_2.5rem]">
-        <span>Total</span>
-        <span>Description</span>
-        <span>Qty</span>
-        <span>Unit price</span>
-        <span>VAT</span>
-        <span className="sr-only">Remove</span>
       </div>
 
       <div className="space-y-3">
@@ -120,20 +115,27 @@ export function InvoiceLineItems() {
           const amounts = lineAmounts(row);
           const started = row.quantity !== "" || row.unitPrice !== "";
           return (
-            <div
-              key={row.id}
-              className="grid gap-2 rounded-lg bg-white/70 p-3 sm:grid-cols-[7.5rem_minmax(0,1fr)_5.5rem_7.5rem_9.5rem_2.5rem] sm:items-start"
-            >
-              <div>
-                <p className="label sm:sr-only">Total</p>
-                <p className="flex min-h-11 items-center text-sm font-semibold text-[color:var(--brand-accent)]">
+            <div key={row.id} className="rounded-lg border border-black/10 bg-white/80 p-3">
+              <div className="mb-2 flex items-center justify-between gap-2">
+                <p className="text-sm font-semibold text-[color:var(--brand-accent)]">
                   {started ? formatMoney(amounts.total, currency) : "—"}
+                  <span className="ml-2 text-xs font-medium text-black/55">
+                    {row.applyVat ? `incl. ${amounts.rate}% VAT` : "no VAT"}
+                  </span>
                 </p>
-                <p className="text-xs text-black/45">
-                  {row.applyVat ? `incl. ${amounts.rate}% VAT` : "no VAT"}
-                </p>
+                <button
+                  type="button"
+                  className="inline-flex h-11 shrink-0 items-center gap-1.5 rounded-lg border border-rose-300 bg-rose-50 px-3 text-sm font-semibold text-rose-800 disabled:border-black/15 disabled:bg-white disabled:text-black/45"
+                  aria-label="Delete this line"
+                  disabled={rows.length === 1}
+                  onClick={() => removeRow(row.id)}
+                >
+                  <TrashIcon />
+                  Delete
+                </button>
               </div>
-              <div>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-[minmax(0,1fr)_5.5rem_7.5rem_9.5rem]">
+              <div className="col-span-2 sm:col-span-1">
                 <label className="label sm:sr-only" htmlFor={`${row.id}-description`}>
                   Description
                 </label>
@@ -181,7 +183,7 @@ export function InvoiceLineItems() {
                   onChange={(event) => update(row.id, { unitPrice: event.target.value })}
                 />
               </div>
-              <div>
+              <div className="col-span-2 sm:col-span-1">
                 <p className="label sm:sr-only">VAT</p>
                 <label className="flex min-h-11 items-center gap-2 text-sm font-semibold text-[color:var(--brand-accent)]">
                   <input
@@ -192,32 +194,8 @@ export function InvoiceLineItems() {
                   />
                   Apply VAT
                 </label>
-                {row.applyVat ? (
-                  <input
-                    name="vatRate"
-                    type="number"
-                    min="0"
-                    step="0.1"
-                    className="field mt-1"
-                    placeholder="VAT %"
-                    aria-label="VAT percent"
-                    value={row.vatRate}
-                    onChange={(event) => update(row.id, { vatRate: event.target.value })}
-                  />
-                ) : (
-                  <input type="hidden" name="vatRate" value="0" />
-                )}
+                <input type="hidden" name="vatRate" value={row.applyVat ? row.vatRate || "7.5" : "0"} />
               </div>
-              <div className="flex sm:justify-end">
-                <button
-                  type="button"
-                  className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-black/10 text-rose-800 hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-40"
-                  aria-label="Remove this line"
-                  disabled={rows.length === 1}
-                  onClick={() => removeRow(row.id)}
-                >
-                  <TrashIcon />
-                </button>
               </div>
             </div>
           );
