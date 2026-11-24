@@ -59,9 +59,20 @@ async function sessionStillValid(session: SessionUser): Promise<SessionUser | nu
     },
   });
   if (!membership) return null;
+  let name = membership.user.name;
+  if (
+    (membership.user.email === "admin" || membership.user.email === "admin@acmefoods.demo") &&
+    name !== "Admin"
+  ) {
+    await prisma.user.update({
+      where: { id: membership.userId },
+      data: { name: "Admin" },
+    });
+    name = "Admin";
+  }
   return {
     ...session,
-    name: membership.user.name,
+    name,
     email: membership.user.email,
     role: membership.role,
     tenantName: membership.tenant.name,

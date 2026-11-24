@@ -110,7 +110,7 @@ export function NrsGateWizard({
               </button>
             ) : (
               <button type="submit" className="btn-primary">
-                Save & continue setup
+                Save & create invoice
               </button>
             )}
           </div>
@@ -237,7 +237,7 @@ function SaveCard({
       <p className="text-xs font-semibold uppercase tracking-[0.16em] text-black/45">Last step</p>
       <h1 className="font-display text-3xl text-[color:var(--brand-accent)]">Save your answers</h1>
       <p className="text-sm text-black/65">
-        Save to keep this setup, or go back to the dashboard. You can return and change any answer.
+        Saving these answers opens the invoice form. You can come back and change any answer.
       </p>
       <ul className="space-y-2">
         {questions.map((question) => (

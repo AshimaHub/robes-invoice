@@ -23,7 +23,7 @@ async function saveGateAction(formData: FormData) {
     answers,
   );
   if (permitDemo) redirect("/company/invoices/new?demo=1");
-  if (completed) redirect("/nrs?gate=passed");
+  if (completed) redirect("/nrs/invoices/new");
   redirect("/nrs/gate?saved=1");
 }
 
