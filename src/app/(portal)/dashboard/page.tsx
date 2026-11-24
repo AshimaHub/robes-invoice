@@ -79,8 +79,8 @@ export default async function DashboardPage() {
           Welcome {session.name.split(" ")[0]}
         </h1>
         <p className="mt-2 max-w-2xl text-sm text-black/65">
-          Robes Invoice for {session.tenantName}. Company invoices are ready now. NRS e-Invoice
-          opens the compliance questions we use to set a client up for NRS e-invoicing.
+          Company invoices are ready now. NRS e-Invoice opens the compliance questions we use
+          to set a client up for NRS e-invoicing.
         </p>
         <div className="mt-4 flex flex-wrap gap-3">
           <Link href="/nrs/gate" className="btn-primary">

@@ -1,11 +1,105 @@
 import { cache } from "react";
+import { APP_LOGO, APP_NAME, LEGACY_DEMO_LOGO } from "./brand";
 import { prisma } from "./prisma";
 
-export const getTenantWithBranding = cache(async (tenantId: string) => {
-  return prisma.tenant.findUnique({
+function withoutAcme(value: string) {
+  return value
+    .replaceAll("Acme Foods Nigeria Limited", APP_NAME)
+    .replaceAll("Acme Foods", APP_NAME);
+}
+
+/** Drop the sample Acme Foods name from the signed-in organisation and its invoices. */
+export const forgetAcmeFoods = cache(async (tenantId: string) => {
+  const tenant = await prisma.tenant.findUnique({
     where: { id: tenantId },
     include: { branding: true },
   });
+  if (!tenant) return;
+  const email = tenant.branding?.invoiceEmail ?? "";
+  const marked =
+    tenant.name.includes("Acme Foods") ||
+    tenant.legalName.includes("Acme Foods") ||
+    (tenant.branding?.invoiceCompanyName ?? "").includes("Acme Foods") ||
+    email.toLowerCase().includes("acmefoods");
+  if (!marked) return;
+
+  await prisma.tenant.update({
+    where: { id: tenant.id },
+    data: {
+      name: withoutAcme(tenant.name),
+      legalName: withoutAcme(tenant.legalName),
+    },
+  });
+  if (tenant.branding) {
+    await prisma.branding.update({
+      where: { id: tenant.branding.id },
+      data: {
+        invoiceCompanyName: tenant.branding.invoiceCompanyName
+          ? withoutAcme(tenant.branding.invoiceCompanyName)
+          : APP_NAME,
+        invoiceEmail: email.toLowerCase().includes("acmefoods") ? null : tenant.branding.invoiceEmail,
+      },
+    });
+  }
+  const invoices = await prisma.invoice.findMany({
+    where: { tenantId },
+    select: { id: true, sellerName: true, buyerName: true, sellerEmail: true },
+  });
+  for (const invoice of invoices) {
+    const sellerName = invoice.sellerName?.includes("Acme Foods")
+      ? withoutAcme(invoice.sellerName)
+      : invoice.sellerName;
+    const buyerName = invoice.buyerName?.includes("Acme Foods")
+      ? withoutAcme(invoice.buyerName)
+      : invoice.buyerName;
+    const sellerEmail = invoice.sellerEmail?.toLowerCase().includes("acmefoods")
+      ? null
+      : invoice.sellerEmail;
+    if (
+      sellerName === invoice.sellerName &&
+      buyerName === invoice.buyerName &&
+      sellerEmail === invoice.sellerEmail
+    ) {
+      continue;
+    }
+    await prisma.invoice.update({
+      where: { id: invoice.id },
+      data: { sellerName, buyerName, sellerEmail },
+    });
+  }
+});
+
+export const getTenantWithBranding = cache(async (tenantId: string) => {
+  await forgetAcmeFoods(tenantId);
+  const tenant = await prisma.tenant.findUnique({
+    where: { id: tenantId },
+    include: { branding: true },
+  });
+  if (!tenant?.branding) return tenant;
+  const currentLogo = tenant.branding.logoUrl;
+  const replaceLogo =
+    !currentLogo ||
+    currentLogo === LEGACY_DEMO_LOGO ||
+    tenant.branding.emailFromName === "Robes Invoice";
+  if (!replaceLogo) return tenant;
+
+  await prisma.branding.update({
+    where: { id: tenant.branding.id },
+    data: { logoUrl: APP_LOGO, emailFromName: APP_NAME },
+  });
+  await prisma.invoice.updateMany({
+    where: {
+      tenantId,
+      OR: [
+        { logoSnapshotUrl: LEGACY_DEMO_LOGO },
+        ...(currentLogo ? [{ logoSnapshotUrl: currentLogo }] : []),
+      ],
+    },
+    data: { logoSnapshotUrl: APP_LOGO },
+  });
+  tenant.branding.logoUrl = APP_LOGO;
+  tenant.branding.emailFromName = APP_NAME;
+  return tenant;
 });
 
 export function brandingCssVars(branding: {

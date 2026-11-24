@@ -11,7 +11,7 @@ export type GateQuestion = {
   requireYes: boolean;
 };
 
-/** Questions a client answers before Robes sets up NRS e-invoicing. */
+/** Questions a client answers before Ibrahim Abdullahi & Co sets up NRS e-invoicing. */
 export const NRS_GATE_QUESTIONS: GateQuestion[] = [
   {
     id: "einvoice_enabled",

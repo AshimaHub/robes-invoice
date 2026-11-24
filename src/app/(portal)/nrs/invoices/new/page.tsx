@@ -37,6 +37,39 @@ function partyAddress(party: {
   return [party.addressLine1, party.city, party.state, "Nigeria"].filter(Boolean).join("\n");
 }
 
+async function rememberBuyerTin(
+  tenantId: string,
+  partyId: string | null,
+  buyer: { name: string; email: string; address: string; tin: string },
+) {
+  const tin = buyer.tin.trim() || null;
+  const name = buyer.name.trim();
+  if (partyId) {
+    const party = await prisma.party.findFirst({ where: { id: partyId, tenantId } });
+    if (party) {
+      await prisma.party.update({ where: { id: party.id }, data: { tin } });
+      return party.id;
+    }
+  }
+  if (!name) return null;
+  const existing = await prisma.party.findFirst({ where: { tenantId, name } });
+  if (existing) {
+    await prisma.party.update({ where: { id: existing.id }, data: { tin } });
+    return existing.id;
+  }
+  const created = await prisma.party.create({
+    data: {
+      tenantId,
+      type: "CUSTOMER",
+      name,
+      tin,
+      email: buyer.email.trim() || null,
+      addressLine1: buyer.address.trim() || null,
+    },
+  });
+  return created.id;
+}
+
 async function addPartyAction(formData: FormData): Promise<
   { ok: true; party: InvoicePartyOption } | { ok: false; error: string }
 > {
@@ -45,13 +78,11 @@ async function addPartyAction(formData: FormData): Promise<
   await requireNrsGate(session.tenantId, session.userId);
   const name = String(formData.get("name") || "").trim();
   if (!name) return { ok: false, error: "Name is required." };
-  const role = String(formData.get("role") || "BUYER");
-  const type = role === "SELLER" ? "SUPPLIER" : "CUSTOMER";
   const address = String(formData.get("address") || "").trim();
   const party = await prisma.party.create({
     data: {
       tenantId: session.tenantId,
-      type,
+      type: "CUSTOMER",
       name,
       tin: String(formData.get("tin") || "").trim() || null,
       email: String(formData.get("email") || "").trim() || null,
@@ -66,7 +97,7 @@ async function addPartyAction(formData: FormData): Promise<
       action: "PARTY_CREATED",
       entity: "Party",
       entityId: party.id,
-      meta: JSON.stringify({ name, type }),
+      meta: JSON.stringify({ name }),
     },
   });
   return {
@@ -110,7 +141,9 @@ async function createInvoiceAction(formData: FormData) {
     address: String(formData.get("buyerAddress") || ""),
     phone: String(formData.get("buyerPhone") || ""),
     email: String(formData.get("buyerEmail") || ""),
+    tin: String(formData.get("buyerTin") || ""),
   };
+  const linkedPartyId = await rememberBuyerTin(session.tenantId, partyId, buyer);
 
   const descriptions = formData.getAll("description").map(String);
   const quantities = formData.getAll("quantity").map(String);
@@ -145,7 +178,7 @@ async function createInvoiceAction(formData: FormData) {
     const invoice = await createAndClearInvoice({
       tenantId: session.tenantId,
       userId: session.userId,
-      partyId,
+      partyId: linkedPartyId,
       invoiceKind,
       invoiceNumber,
       issueDate,
@@ -225,7 +258,23 @@ export default async function NewNrsInvoicePage({
 
       <InvoicePartyProvider parties={partyOptions} addParty={addPartyAction}>
       <form action={createInvoiceAction} className="panel space-y-5 p-4 sm:p-5" encType="multipart/form-data">
-        <AddSellerBuyer />
+        <AddSellerBuyer
+          trailing={
+            <label className="flex shrink-0 items-center gap-2 text-sm font-semibold text-[color:var(--brand-accent)]">
+              Kind
+              <select
+                id="invoiceKind"
+                name="invoiceKind"
+                className="field w-auto py-2 text-sm"
+                defaultValue="B2B"
+              >
+                <option value="B2B">B2B</option>
+                <option value="B2C">B2C</option>
+                <option value="B2G">B2G</option>
+              </select>
+            </label>
+          }
+        />
         <div className="grid gap-4 lg:grid-cols-2">
         <section className="space-y-3 rounded-xl bg-white/45 p-3">
           <h2 className="font-display text-lg text-[color:var(--brand-accent)]">Seller</h2>
@@ -308,14 +357,15 @@ export default async function NewNrsInvoicePage({
               />
             </div>
             <div>
-              <label className="label" htmlFor="invoiceKind">
-                Kind
+              <label className="label" htmlFor="buyerTin">
+                TIN
               </label>
-              <select id="invoiceKind" name="invoiceKind" className="field" defaultValue="B2B">
-                <option value="B2B">B2B</option>
-                <option value="B2C">B2C</option>
-                <option value="B2G">B2G</option>
-              </select>
+              <input
+                id="buyerTin"
+                name="buyerTin"
+                className="field"
+                defaultValue={defaultParty?.tin || ""}
+              />
             </div>
           </div>
         </section>

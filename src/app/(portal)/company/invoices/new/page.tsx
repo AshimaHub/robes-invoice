@@ -135,7 +135,7 @@ export default async function NewCompanyInvoicePage({
   const demo = params.demo === "1";
   const [parties, tenant, branding] = await Promise.all([
     prisma.party.findMany({
-      where: { tenantId: session.tenantId, type: "CUSTOMER" },
+      where: { tenantId: session.tenantId },
       orderBy: { name: "asc" },
     }),
     prisma.tenant.findUniqueOrThrow({ where: { id: session.tenantId } }),
@@ -251,7 +251,7 @@ export default async function NewCompanyInvoicePage({
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label className="label" htmlFor="partyId">
-                Saved customer (optional)
+                Saved party (optional)
               </label>
               <select id="partyId" name="partyId" className="field" defaultValue={defaultParty?.id || ""}>
                 <option value="">— Enter buyer manually —</option>

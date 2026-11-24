@@ -1,4 +1,5 @@
 import type { Invoice, InvoiceLine, Party, Tenant } from "@prisma/client";
+import { APP_LOGO } from "@/lib/brand";
 
 export type NrsDocumentInvoice = Invoice & {
   lines: InvoiceLine[];
@@ -77,14 +78,12 @@ export function NrsInvoiceDocument({
         {/* Header */}
         <header className="flex flex-wrap items-start justify-between gap-4 border-b border-[#e5e7eb] pb-5">
           <div className="flex items-center gap-3">
-            {invoice.logoSnapshotUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={invoice.logoSnapshotUrl}
-                alt=""
-                className="h-12 w-auto max-w-[120px] object-contain"
-              />
-            ) : null}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={invoice.logoSnapshotUrl || APP_LOGO}
+              alt=""
+              className="h-16 w-auto max-w-[9rem] object-contain"
+            />
             <div className="nrs-logo" aria-hidden>
               <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
                 <circle cx="22" cy="22" r="21" fill="#E8F5E9" stroke="#006837" strokeWidth="1.5" />
@@ -375,7 +374,7 @@ export function NrsInvoiceDocument({
             Verify this invoice at https://e-invoice.nrs.gov.ng/verify using the reference code
             or by scanning the QR code.{" "}
             <em className="text-[#374151]">
-              (Illustrative link — Robes Invoice mock clearance only.)
+              (Illustrative link — demo mock clearance only.)
             </em>
           </p>
         </div>
@@ -384,7 +383,7 @@ export function NrsInvoiceDocument({
         <footer className="relative mt-6 border-t border-[#e5e7eb] pt-4 text-center text-xs text-[#1f2937]">
           <p>This is a computer-generated e-invoice and is valid without a physical signature.</p>
           <p className="mt-1 font-medium text-[#b45309]">
-            Sample / Illustrative — Robes Invoice demo mock. Not a live Nigeria Revenue Service
+            Sample / Illustrative — demo mock. Not a live Nigeria Revenue Service
             fiscal document.
           </p>
           <span

@@ -22,9 +22,9 @@ async function main() {
 
   const tenant = await prisma.tenant.create({
     data: {
-      name: "Acme Foods",
-      slug: "acme-foods",
-      legalName: "Acme Foods Nigeria Limited",
+      name: "Ibrahim Abdullahi & Co",
+      slug: "ibrahim-abdullahi",
+      legalName: "Ibrahim Abdullahi & Co",
       tin: "12345678-0001",
       businessId: "MBS-BUS-ACME-001",
       serviceId: "SVC-ACME-DEMO",
@@ -39,13 +39,13 @@ async function main() {
           secondaryColor: "#C4A35A",
           accentColor: "#143D2B",
           loginHeroText:
-            "Company invoicing and NRS-compliant e-invoice tools — Robes Invoice demo.",
-          emailFromName: "Robes Invoice",
+            "Company invoicing and NRS-compliant e-invoice tools.",
+          emailFromName: "Ibrahim Abdullahi & Co",
           domainHint: "invoice.robes.demo",
-          logoUrl: "/uploads/demo/acme-logo.svg",
-          invoiceCompanyName: "Acme Foods Nigeria Limited",
+          logoUrl: "/brand/ibrahim-abdullahi-logo.jpg",
+          invoiceCompanyName: "Ibrahim Abdullahi & Co",
           invoicePhone: "+234 801 111 2233",
-          invoiceEmail: "billing@acmefoods.demo",
+          invoiceEmail: null,
         },
       },
       credentials: {
@@ -218,7 +218,7 @@ async function main() {
     issueDate: companyIssue.toISOString().slice(0, 10),
     dueDate: companyDue.toISOString().slice(0, 10),
     currency: "NGN",
-    seller: { name: "Acme Foods Nigeria Limited", tin: tenant.tin },
+    seller: { name: "Ibrahim Abdullahi & Co", tin: tenant.tin },
     buyer: { name: party.name },
     totals: {
       subtotal: companySubtotal,
@@ -254,10 +254,10 @@ async function main() {
       status: "ISSUED",
       notes: "Sample company invoice (commercial only — not NRS).",
       paymentTerms: "Net 14 days · Bank transfer",
-      sellerName: "Acme Foods Nigeria Limited",
+      sellerName: "Ibrahim Abdullahi & Co",
       sellerAddress: "12 Warehouse Road\nLagos, Lagos\nNigeria",
       sellerPhone: "+234 801 111 2233",
-      sellerEmail: "billing@acmefoods.demo",
+      sellerEmail: null,
       sellerTin: tenant.tin,
       buyerName: party.name,
       buyerAddress: "45 Trade Fair Complex\nLagos, Lagos\nNigeria",
@@ -292,7 +292,7 @@ async function main() {
     },
   });
 
-  console.log("Seeded Robes Invoice demo tenant (sample org: Acme Foods)");
+  console.log("Seeded demo tenant");
   console.log("  Admin:  admin / 0000");
   console.log("  Issuer: issuer@acmefoods.demo / demo1234");
   console.log("  NRS gate: admin starts on the compliance questions");

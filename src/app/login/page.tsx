@@ -9,6 +9,7 @@ import {
 } from "@/lib/auth";
 import { AuthMotifBackground } from "@/components/auth-motif-background";
 import { PasswordField } from "@/components/password-field";
+import { APP_LOGO, APP_NAME } from "@/lib/brand";
 
 export const instant = false;
 
@@ -58,11 +59,14 @@ export default async function LoginPage({
       <AuthMotifBackground variant="login" />
 
       <div className="anim-rise relative z-10 w-full max-w-md rounded-2xl bg-[#f7f4ec] p-5 text-[#1a2a22] shadow-xl shadow-black/30 sm:p-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--brand-primary)]">
-          Robes
-        </p>
-        <h1 className="font-display mt-2 text-3xl text-[color:var(--brand-accent)]">
-          Robes Invoice
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={APP_LOGO}
+          alt=""
+          className="mx-auto h-28 w-auto max-w-full object-contain"
+        />
+        <h1 className="font-display mt-4 text-center text-2xl text-[color:var(--brand-accent)] sm:text-3xl">
+          {APP_NAME}
         </h1>
         <p className="mt-2 text-sm text-black/65">
           Company invoicing and NRS-compliant e-invoice tools for your finance team.
@@ -102,11 +106,11 @@ export default async function LoginPage({
 
         <div className="anim-rise-delay mt-6 rounded-lg border border-black/8 bg-white/60 p-3 text-xs text-black/60">
           <p className="font-semibold text-[color:var(--brand-accent)]">
-            Robes Invoice demo accounts
+            Demo accounts
           </p>
           <p className="mt-1">admin / 0000 (Tenant Admin)</p>
           <p>issuer@acmefoods.demo / demo1234 (Issuer)</p>
-          <p className="mt-2 italic">Demo tenant data only — product brand is Robes Invoice.</p>
+          <p className="mt-2 italic">Demo tenant data only.</p>
         </div>
       </div>
     </div>

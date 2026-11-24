@@ -136,8 +136,8 @@ function BriefingCard({ completed, saved }: { completed: boolean; saved: boolean
       <h1 className="font-display text-3xl text-[color:var(--brand-accent)]">NRS e-Invoice</h1>
       <p className="text-sm leading-6 text-black/70">
         NRS e-invoicing is how a business issues invoices the Nigeria Revenue Service can clear.
-        Robes sets that up for a client so the organisation can send compliant e-invoices instead
-        of paper or ordinary PDF bills.
+        Ibrahim Abdullahi & Co sets that up for a client so the organisation can send compliant
+        e-invoices instead of paper or ordinary PDF bills.
       </p>
       <p className="text-sm leading-6 text-black/70">
         The next cards ask one question at a time about enrolment, tax identity, and credentials.

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { logout } from "@/lib/auth";
 import type { SessionUser } from "@/lib/auth";
 import { AuthMotifBackground } from "@/components/auth-motif-background";
+import { APP_LOGO, APP_NAME } from "@/lib/brand";
 
 const primaryNav = [
   { href: "/dashboard", label: "Dashboard" },
@@ -45,21 +46,20 @@ export function AppShell({
         style={{ background: "color-mix(in srgb, var(--brand-accent) 92%, black)" }}
       >
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-3 text-white">
-          <div className="flex items-center gap-3">
-            <div
-              className="flex h-10 w-10 items-center justify-center rounded-md text-sm font-bold"
-              style={{ background: "var(--brand-secondary)", color: accent }}
-              aria-hidden
-            >
-              RI
-            </div>
-            <div>
-              <p className="font-[family-name:var(--font-display)] text-lg leading-tight">
-                Robes Invoice
+          <div className="flex min-w-0 items-center gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={APP_LOGO}
+              alt=""
+              className="h-14 w-auto max-w-[4.5rem] shrink-0 rounded-md bg-white object-contain p-0.5"
+            />
+            <div className="min-w-0">
+              <p className="font-[family-name:var(--font-display)] text-base leading-tight sm:text-lg">
+                {APP_NAME}
               </p>
-              <p className="text-xs text-white">
-                Robes · {session.tenantName}
-              </p>
+              {session.tenantName !== APP_NAME ? (
+                <p className="truncate text-xs text-white">{session.tenantName}</p>
+              ) : null}
             </div>
           </div>
           <div className="flex items-center gap-4 text-sm">
@@ -95,7 +95,7 @@ export function AppShell({
       </header>
       <main className="relative z-10 mx-auto max-w-6xl px-4 py-8">{children}</main>
       <footer className="relative z-10 mx-auto max-w-6xl px-4 pb-8 text-xs text-black/50 print:hidden">
-        Robes Invoice — company invoicing plus optional NRS mock clearance (not live Nigeria
+        {APP_NAME} — company invoicing plus optional NRS mock clearance (not live Nigeria
         Revenue Service submission).
       </footer>
     </div>

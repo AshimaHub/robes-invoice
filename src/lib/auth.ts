@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 import { cache } from "react";
 import { prisma } from "./prisma";
+import { forgetAcmeFoods } from "./tenant";
 
 /** Bumped to invalidate cookies left over from DB reseed/migrate. */
 export const SESSION_COOKIE = "robes_session_v2";
@@ -48,6 +49,7 @@ export async function clearSessionCookie() {
 }
 
 async function sessionStillValid(session: SessionUser): Promise<SessionUser | null> {
+  await forgetAcmeFoods(session.tenantId);
   const membership = await prisma.membership.findFirst({
     where: {
       userId: session.userId,

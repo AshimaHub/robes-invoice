@@ -13,7 +13,7 @@ async function addPartyAction(formData: FormData) {
   await prisma.party.create({
     data: {
       tenantId: session.tenantId,
-      type: String(formData.get("type") || "CUSTOMER"),
+      type: "CUSTOMER",
       name,
       tin: String(formData.get("tin") || "") || null,
       email: String(formData.get("email") || "") || null,
@@ -62,7 +62,7 @@ export default async function NrsPartiesPage({
           Parties
         </h1>
         <p className="mt-2 text-sm text-black/60">
-          Customers and suppliers with TIN and address fields for NRS invoice issuance.
+          A saved name can be used as the seller or the buyer.
         </p>
       </div>
 
@@ -85,7 +85,7 @@ export default async function NrsPartiesPage({
                 <li key={p.id} className="py-3">
                   <p className="font-semibold text-[color:var(--brand-accent)]">{p.name}</p>
                   <p className="text-xs text-black/55">
-                    {p.type} · TIN {p.tin ?? "—"} · {p.city ?? "—"}, {p.state ?? "—"}
+                    TIN {p.tin ?? "—"} · {p.city ?? "—"}, {p.state ?? "—"}
                   </p>
                 </li>
               ))}
@@ -102,22 +102,11 @@ export default async function NrsPartiesPage({
               </label>
               <input id="name" name="name" className="field" required />
             </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div>
-                <label className="label" htmlFor="type">
-                  Type
-                </label>
-                <select id="type" name="type" className="field" defaultValue="CUSTOMER">
-                  <option value="CUSTOMER">Customer</option>
-                  <option value="SUPPLIER">Supplier</option>
-                </select>
-              </div>
-              <div>
-                <label className="label" htmlFor="tin">
-                  TIN
-                </label>
-                <input id="tin" name="tin" className="field" />
-              </div>
+            <div>
+              <label className="label" htmlFor="tin">
+                TIN
+              </label>
+              <input id="tin" name="tin" className="field" />
             </div>
             <div>
               <label className="label" htmlFor="email">

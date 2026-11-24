@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, type ReactNode } from "react";
+import { APP_NAME } from "@/lib/brand";
 
 const LAST = 3;
 
@@ -146,7 +147,7 @@ function SignCard() {
       <h1 className="font-display text-3xl text-[color:var(--brand-accent)]">Sign and submit</h1>
       <p className="text-sm leading-6 text-black/70">
         Signing means the business stands behind this invoice. Submit is the moment that signed
-        invoice is sent for clearance. In a live setup, Robes sends it on. This demo does not
+        invoice is sent for clearance. In a live setup, {APP_NAME} sends it on. This demo does not
         contact the live Nigeria Revenue Service.
       </p>
     </div>

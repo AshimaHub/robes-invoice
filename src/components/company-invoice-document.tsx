@@ -1,4 +1,5 @@
 import type { Invoice, InvoiceLine } from "@prisma/client";
+import { APP_LOGO } from "@/lib/brand";
 
 export type CompanyDocumentInvoice = Invoice & {
   lines: InvoiceLine[];
@@ -48,21 +49,12 @@ export function CompanyInvoiceDocument({
       <div className="company-doc-inner p-4 sm:p-10">
         <header className="flex flex-wrap items-start justify-between gap-6 border-b-2 border-[#0b5e3c] pb-6">
           <div className="flex min-w-0 flex-1 items-start gap-4">
-            {invoice.logoSnapshotUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={invoice.logoSnapshotUrl}
-                alt=""
-                className="h-16 w-16 shrink-0 object-contain"
-              />
-            ) : (
-              <div
-                className="flex h-16 w-16 shrink-0 items-center justify-center rounded-md bg-[#0b5e3c] text-lg font-bold text-white"
-                aria-hidden
-              >
-                {(invoice.sellerName || "CI").slice(0, 2).toUpperCase()}
-              </div>
-            )}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={invoice.logoSnapshotUrl || APP_LOGO}
+              alt=""
+              className="h-20 w-auto max-w-[9.5rem] shrink-0 object-contain"
+            />
             <div className="min-w-0">
               <h1 className="font-display text-2xl font-semibold tracking-tight text-[#143d2b] sm:text-3xl">
                 {invoice.sellerName || "Company invoice"}
@@ -227,7 +219,7 @@ export function CompanyInvoiceDocument({
         <footer className="mt-10 border-t border-black/8 pt-4 text-xs text-black/45">
           {invoice.irn
             ? "Demo copy. The IRN is a showcase receipt, not a live Nigeria Revenue Service submission."
-            : "Commercial invoice generated with Robes Invoice. This is not an NRS-cleared e-invoice."}
+            : "Commercial invoice. This is not an NRS-cleared e-invoice."}
         </footer>
       </div>
     </article>

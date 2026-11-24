@@ -61,12 +61,11 @@ export function InvoicePartyProvider({
   );
 }
 
-export function AddSellerBuyer() {
+export function AddSellerBuyer({ trailing }: { trailing?: ReactNode }) {
   const { addParty, remember } = useParties();
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(false);
   const [notice, setNotice] = useState("");
-  const [role, setRole] = useState("BUYER");
   const [draft, setDraft] = useState({
     name: "",
     email: "",
@@ -82,7 +81,6 @@ export function AddSellerBuyer() {
     }
     setPending(true);
     const formData = new FormData();
-    formData.set("role", role);
     formData.set("name", name);
     formData.set("email", draft.email.trim());
     formData.set("tin", draft.tin.trim());
@@ -96,38 +94,25 @@ export function AddSellerBuyer() {
     remember(result.party);
     setDraft({ name: "", email: "", tin: "", address: "" });
     setOpen(false);
-    setNotice(`${result.party.name} saved. Select it in Seller or Buyer, or type another name.`);
+    setNotice(`${result.party.name} saved. You can select it as Seller or Buyer.`);
   }
 
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex items-center justify-between gap-3">
         <button
           type="button"
-          className="btn-secondary px-3 py-2 text-sm"
+          className="btn-primary px-3 py-2 text-sm"
           onClick={() => setOpen((value) => !value)}
         >
-          Add Seller/Buyer
+          Add Party
         </button>
-        {notice ? <p className="text-sm text-[color:var(--brand-accent)]">{notice}</p> : null}
+        {trailing}
       </div>
+      {notice ? <p className="text-sm text-[color:var(--brand-accent)]">{notice}</p> : null}
       {open ? (
         <div className="space-y-3 rounded-lg bg-white/70 p-4">
           <div className="grid gap-3 sm:grid-cols-2">
-            <div>
-              <label className="label" htmlFor="newPartyRole">
-                This party is a
-              </label>
-              <select
-                id="newPartyRole"
-                className="field"
-                value={role}
-                onChange={(event) => setRole(event.target.value)}
-              >
-                <option value="SELLER">Seller</option>
-                <option value="BUYER">Buyer</option>
-              </select>
-            </div>
             <div>
               <label className="label" htmlFor="newPartyName">
                 Name
@@ -221,6 +206,7 @@ export function PartyNameField({
     }
     setField("buyerAddress", match.address);
     setField("buyerEmail", match.email ?? "");
+    setField("buyerTin", match.tin ?? "");
   }
 
   return (
@@ -244,7 +230,6 @@ export function PartyNameField({
           <option
             key={party.id}
             value={party.name}
-            label={party.type === "SUPPLIER" ? "Seller" : "Buyer"}
           />
         ))}
       </datalist>
