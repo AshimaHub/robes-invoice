@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRef, useState } from "react";
 
 type GateAnswer = "yes" | "no" | "unsure" | "";
@@ -90,7 +89,7 @@ export function NrsGateWizard({
         ) : null}
       </div>
 
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <button
           type="button"
           className="btn-secondary disabled:cursor-not-allowed disabled:opacity-40"
@@ -100,20 +99,15 @@ export function NrsGateWizard({
           Previous
         </button>
         {index === lastCard ? (
-          <div className="flex flex-wrap justify-end gap-3">
-            <Link href="/dashboard" className="btn-secondary">
-              Back to dashboard
-            </Link>
-            {unsureQuestions(questions, answers).length > 0 ? (
-              <button type="submit" name="permitDemo" value="1" className="btn-primary">
-                Permit me to see Demo
-              </button>
-            ) : (
-              <button type="submit" className="btn-primary">
-                Save & create invoice
-              </button>
-            )}
-          </div>
+          unsureQuestions(questions, answers).length > 0 ? (
+            <button type="submit" name="permitDemo" value="1" className="btn-primary w-full sm:w-auto">
+              Permit me to see Demo
+            </button>
+          ) : (
+            <button type="submit" className="btn-primary w-full sm:w-auto">
+              Save & create invoice
+            </button>
+          )
         ) : (
           <button
             type="button"
