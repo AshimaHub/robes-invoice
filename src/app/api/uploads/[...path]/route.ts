@@ -1,6 +1,6 @@
 import { readFile } from "fs/promises";
 import path from "path";
-import { NextResponse } from "next/server";
+import { connection, NextResponse } from "next/server";
 
 const TYPES: Record<string, string> = {
   png: "image/png",
@@ -11,13 +11,12 @@ const TYPES: Record<string, string> = {
   svg: "image/svg+xml",
 };
 
-export const dynamic = "force-dynamic";
-
 /** Serve a logo saved after the app started. The public folder only includes files from the build. */
 export async function GET(
   _request: Request,
   context: { params: Promise<{ path: string[] }> },
 ) {
+  await connection();
   const { path: parts } = await context.params;
   if (!parts?.length || parts.some((part) => part === ".." || part.includes("\\") || part.includes("/"))) {
     return new NextResponse("Not found", { status: 404 });
