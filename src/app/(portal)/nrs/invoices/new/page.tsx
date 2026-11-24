@@ -1,10 +1,13 @@
 import { redirect } from "next/navigation";
+import { BackLink } from "@/components/back-link";
 import {
   AddSellerBuyer,
   InvoicePartyProvider,
   PartyNameField,
   type InvoicePartyOption,
 } from "@/components/invoice-party-fields";
+import { LogoUploadField } from "@/components/logo-upload-field";
+import { SubmitButton } from "@/components/submit-button";
 import { InvoiceLineItems } from "@/components/invoice-line-items";
 import { requireSession } from "@/lib/auth";
 import { createAndClearInvoice } from "@/lib/invoices";
@@ -243,6 +246,7 @@ export default async function NewNrsInvoicePage({
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
+      <BackLink href="/dashboard" />
       <div>
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--brand-primary)]">
           NRS Compliant e-Invoice
@@ -257,7 +261,7 @@ export default async function NewNrsInvoicePage({
       ) : null}
 
       <InvoicePartyProvider parties={partyOptions} addParty={addPartyAction}>
-      <form action={createInvoiceAction} className="panel space-y-5 p-4 sm:p-5" encType="multipart/form-data">
+      <form action={createInvoiceAction} className="panel space-y-5 p-4 sm:p-5">
         <AddSellerBuyer
           trailing={
             <label className="flex shrink-0 items-center gap-2 text-sm font-semibold text-[color:var(--brand-accent)]">
@@ -440,21 +444,7 @@ export default async function NewNrsInvoicePage({
         </section>
 
         <section className="grid gap-3 sm:grid-cols-2">
-          <div className="space-y-2">
-            <label className="label" htmlFor="logo">
-              Logo
-            </label>
-            <input
-              id="logo"
-              name="logo"
-              type="file"
-              accept="image/png,image/jpeg,image/webp,image/gif"
-              className="field file:mr-3 file:rounded file:border-0 file:bg-[color:var(--brand-primary)] file:px-2 file:py-1 file:text-xs file:font-semibold file:text-white"
-            />
-            {branding?.logoUrl ? (
-              <p className="text-xs text-black/50">Current logo stays if you leave this empty.</p>
-            ) : null}
-          </div>
+          <LogoUploadField currentUrl={branding?.logoUrl} />
           <label className="flex items-center gap-3 self-end rounded-lg bg-white/70 p-3 text-sm font-semibold text-[color:var(--brand-accent)]">
             <input
               type="checkbox"
@@ -465,9 +455,7 @@ export default async function NewNrsInvoicePage({
           </label>
         </section>
 
-        <button type="submit" className="btn-primary">
-          Create &amp; view invoice
-        </button>
+        <SubmitButton pendingLabel="Creating invoice…">Create &amp; view invoice</SubmitButton>
       </form>
       </InvoicePartyProvider>
     </div>

@@ -9,6 +9,7 @@ import {
 } from "@/lib/auth";
 import { AuthMotifBackground } from "@/components/auth-motif-background";
 import { PasswordField } from "@/components/password-field";
+import { SubmitButton } from "@/components/submit-button";
 import { APP_LOGO, APP_NAME } from "@/lib/brand";
 
 export const instant = false;
@@ -99,9 +100,9 @@ export default async function LoginPage({
             </label>
             <PasswordField defaultValue="0000" />
           </div>
-          <button type="submit" className="btn-primary w-full anim-pulse-once">
+          <SubmitButton pendingLabel="Signing in…" className="btn-primary w-full anim-pulse-once">
             Sign in
-          </button>
+          </SubmitButton>
         </form>
 
         <div className="anim-rise-delay mt-6 rounded-lg border border-black/8 bg-white/60 p-3 text-xs text-black/60">

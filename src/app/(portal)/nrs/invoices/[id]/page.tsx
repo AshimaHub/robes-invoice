@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { BackLink } from "@/components/back-link";
+import { SubmitButton } from "@/components/submit-button";
 import { requireSession } from "@/lib/auth";
 import { createAndClearInvoice } from "@/lib/invoices";
 import { requireNrsGate } from "@/lib/nrs-gate";
@@ -78,6 +80,7 @@ export default async function NrsInvoiceDetailPage({
 
   return (
     <div className="space-y-6">
+      <BackLink href="/nrs/invoices" label="Back to NRS invoices" />
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--brand-primary)]">
@@ -233,9 +236,9 @@ export default async function NrsInvoiceDetailPage({
                 defaultValue={`Credit against ${invoice.invoiceNumber}`}
               />
             </div>
-            <button type="submit" className="btn-secondary sm:col-span-3 sm:w-fit">
+            <SubmitButton pendingLabel="Issuing credit note…" className="btn-secondary sm:col-span-3 sm:w-fit">
               Issue credit note
-            </button>
+            </SubmitButton>
           </form>
           {invoice.adjustments.length > 0 ? (
             <ul className="mt-4 text-sm">

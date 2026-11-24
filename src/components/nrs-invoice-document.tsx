@@ -72,17 +72,19 @@ export function NrsInvoiceDocument({
       ? Number(((invoice.vatTotal / invoice.subtotal) * 100).toFixed(1))
       : 7.5);
 
+  const showQr = Boolean(invoice.includeQr || invoice.qrSvg);
+
   return (
     <article className="nrs-doc mx-auto w-full max-w-[900px] bg-white text-[#1a1a1a] shadow-lg print:shadow-none">
       <div className="nrs-doc-inner p-6 sm:p-8">
         {/* Header */}
         <header className="flex flex-wrap items-start justify-between gap-4 border-b border-[#e5e7eb] pb-5">
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={invoice.logoSnapshotUrl || APP_LOGO}
               alt=""
-              className="h-16 w-auto max-w-[9rem] object-contain"
+              className="h-24 w-auto max-w-[11rem] shrink-0 object-contain"
             />
             <div className="nrs-logo" aria-hidden>
               <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
@@ -113,13 +115,27 @@ export function NrsInvoiceDocument({
               </div>
             </div>
           </div>
-          <div className="text-right">
-            <p className="text-sm font-bold text-[#111827]">
-              Electronic Tax Invoice (e-Invoice)
-            </p>
-            <p className="mt-0.5 max-w-[260px] text-xs text-[#1f2937]">
-              Issued under the Nigeria Revenue Service (NRS) e-Invoicing System
-            </p>
+          <div className="flex flex-col items-end gap-3 text-right">
+            {showQr ? (
+              invoice.qrSvg ? (
+                <div
+                  className="nrs-qr shrink-0 rounded bg-white p-1"
+                  dangerouslySetInnerHTML={{ __html: invoice.qrSvg }}
+                />
+              ) : (
+                <div className="flex h-[120px] w-[120px] items-center justify-center rounded border border-dashed border-[#cbd5e1] text-center text-xs text-[#374151]">
+                  QR after clearance
+                </div>
+              )
+            ) : null}
+            <div>
+              <p className="text-sm font-bold text-[#111827]">
+                Electronic Tax Invoice (e-Invoice)
+              </p>
+              <p className="mt-0.5 max-w-[260px] text-xs text-[#1f2937]">
+                Issued under the Nigeria Revenue Service (NRS) e-Invoicing System
+              </p>
+            </div>
           </div>
         </header>
 
@@ -299,7 +315,7 @@ export function NrsInvoiceDocument({
         </div>
 
         {/* Payment + QR */}
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
+        <div className="mt-6">
           <section className="overflow-hidden rounded-lg border border-[#c8e6c9]">
             <div className="bg-[#E8F5E9] px-4 py-2 text-sm font-bold text-[#006837]">
               Payment Information
@@ -335,27 +351,6 @@ export function NrsInvoiceDocument({
               </p>
             </div>
           </section>
-
-          {invoice.includeQr || invoice.qrSvg ? (
-          <section className="flex flex-wrap items-center gap-4 rounded-lg border border-[#e5e7eb] p-4">
-            {invoice.qrSvg ? (
-              <div
-                className="nrs-qr shrink-0 rounded bg-white p-1"
-                dangerouslySetInnerHTML={{ __html: invoice.qrSvg }}
-              />
-            ) : (
-              <div className="flex h-[120px] w-[120px] items-center justify-center rounded border border-dashed border-[#cbd5e1] text-center text-xs text-[#374151]">
-                QR after clearance
-              </div>
-            )}
-            <p className="max-w-[200px] text-sm text-[#1f2937]">
-              Scan to verify this invoice on the NRS e-Invoice platform.
-              <span className="mt-1 block text-xs italic text-[#374151]">
-                Mock / demo QR — not live NRS verification.
-              </span>
-            </p>
-          </section>
-          ) : null}
         </div>
 
         {/* Verification bar */}

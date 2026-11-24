@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { BackLink } from "@/components/back-link";
 import { NrsGateWizard } from "@/components/nrs-gate-wizard";
 import { requireSession } from "@/lib/auth";
 import {
@@ -39,12 +40,15 @@ export default async function NrsGatePage({
   const status = await getNrsGateStatus(session.tenantId, session.userId);
 
   return (
-    <NrsGateWizard
-      questions={NRS_GATE_QUESTIONS}
-      initialAnswers={status.answers}
-      completed={status.completed}
-      saved={Boolean(params.saved)}
-      saveAction={saveGateAction}
-    />
+    <div className="space-y-4">
+      <BackLink href="/dashboard" />
+      <NrsGateWizard
+        questions={NRS_GATE_QUESTIONS}
+        initialAnswers={status.answers}
+        completed={status.completed}
+        saved={Boolean(params.saved)}
+        saveAction={saveGateAction}
+      />
+    </div>
   );
 }

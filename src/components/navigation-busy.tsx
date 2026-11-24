@@ -1,16 +1,17 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PageLoader } from "@/components/page-loader";
 
 export function NavigationBusy() {
   const pathname = usePathname();
+  const search = useSearchParams();
   const [pending, setPending] = useState(false);
 
   useEffect(() => {
     setPending(false);
-  }, [pathname]);
+  }, [pathname, search]);
 
   useEffect(() => {
     function onClick(event: MouseEvent) {
@@ -40,16 +41,26 @@ export function NavigationBusy() {
       }
       if (url.origin !== window.location.origin) return;
       if (url.pathname === window.location.pathname && url.search === window.location.search) return;
-      window.setTimeout(() => setPending(true), 0);
+      setPending(true);
+    }
+
+    function onSubmit(event: SubmitEvent) {
+      if (event.defaultPrevented) return;
+      if (!(event.target instanceof HTMLFormElement)) return;
+      setPending(true);
     }
 
     document.addEventListener("click", onClick);
-    return () => document.removeEventListener("click", onClick);
+    document.addEventListener("submit", onSubmit, true);
+    return () => {
+      document.removeEventListener("click", onClick);
+      document.removeEventListener("submit", onSubmit, true);
+    };
   }, []);
 
   useEffect(() => {
     if (!pending) return;
-    const id = window.setTimeout(() => setPending(false), 8000);
+    const id = window.setTimeout(() => setPending(false), 20000);
     return () => window.clearTimeout(id);
   }, [pending]);
 
@@ -57,7 +68,7 @@ export function NavigationBusy() {
 
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-[#f4f1ea]/75"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#f4f1ea]/80"
       aria-live="polite"
       aria-busy="true"
     >

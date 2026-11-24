@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { requireSession } from "@/lib/auth";
+import { BackLink } from "@/components/back-link";
 import { requireNrsGate } from "@/lib/nrs-gate";
 import { prisma } from "@/lib/prisma";
 import { formatDate, formatMoney } from "@/lib/tenant";
@@ -31,6 +32,7 @@ export default async function NrsInvoicesPage({
 
   return (
     <div className="space-y-6">
+      <BackLink href="/dashboard" />
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--brand-primary)]">

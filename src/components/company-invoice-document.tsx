@@ -53,7 +53,7 @@ export function CompanyInvoiceDocument({
             <img
               src={invoice.logoSnapshotUrl || APP_LOGO}
               alt=""
-              className="h-20 w-auto max-w-[9.5rem] shrink-0 object-contain"
+              className="h-24 w-auto max-w-[11rem] shrink-0 object-contain"
             />
             <div className="min-w-0">
               <h1 className="font-display text-2xl font-semibold tracking-tight text-[#143d2b] sm:text-3xl">
@@ -73,6 +73,13 @@ export function CompanyInvoiceDocument({
           </div>
 
           <div className="flex flex-col items-end gap-3 text-right">
+            {invoice.includeQr && invoice.qrSvg ? (
+              <div
+                className="company-qr"
+                dangerouslySetInnerHTML={{ __html: invoice.qrSvg }}
+                title="Scan for invoice details"
+              />
+            ) : null}
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#0b5e3c]">
                 Invoice
@@ -90,13 +97,6 @@ export function CompanyInvoiceDocument({
                 Currency: {invoice.currency === "NGN" ? "₦ NGN" : invoice.currency}
               </p>
             </div>
-            {invoice.includeQr && invoice.qrSvg ? (
-              <div
-                className="company-qr"
-                dangerouslySetInnerHTML={{ __html: invoice.qrSvg }}
-                title="Scan for invoice details"
-              />
-            ) : null}
           </div>
         </header>
 

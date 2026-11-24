@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { requireSession } from "@/lib/auth";
+import { BackLink } from "@/components/back-link";
 import { prisma } from "@/lib/prisma";
 import { formatDate, formatMoney } from "@/lib/tenant";
 import { StatusBadge } from "@/components/status-badge";
@@ -29,6 +30,7 @@ export default async function CompanyInvoicesPage({
 
   return (
     <div className="space-y-6">
+      <BackLink href="/dashboard" />
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--brand-primary)]">

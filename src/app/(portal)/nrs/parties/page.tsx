@@ -1,4 +1,6 @@
 import { redirect } from "next/navigation";
+import { BackLink } from "@/components/back-link";
+import { SubmitButton } from "@/components/submit-button";
 import { requireSession } from "@/lib/auth";
 import { requireNrsGate } from "@/lib/nrs-gate";
 import { prisma } from "@/lib/prisma";
@@ -54,6 +56,7 @@ export default async function NrsPartiesPage({
 
   return (
     <div className="space-y-6">
+      <BackLink href="/dashboard" />
       <div>
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--brand-primary)]">
           NRS Compliant e-Invoice
@@ -140,9 +143,7 @@ export default async function NrsPartiesPage({
                 <input id="lga" name="lga" className="field" />
               </div>
             </div>
-            <button type="submit" className="btn-primary">
-              Save party
-            </button>
+            <SubmitButton pendingLabel="Saving…">Save party</SubmitButton>
           </form>
         </section>
       </div>

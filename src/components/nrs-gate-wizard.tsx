@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { SubmitButton } from "@/components/submit-button";
 
 type GateAnswer = "yes" | "no" | "unsure" | "";
 
@@ -100,13 +101,18 @@ export function NrsGateWizard({
         </button>
         {index === lastCard ? (
           unsureQuestions(questions, answers).length > 0 ? (
-            <button type="submit" name="permitDemo" value="1" className="btn-primary w-full sm:w-auto">
+            <SubmitButton
+              name="permitDemo"
+              value="1"
+              pendingLabel="Opening demo…"
+              className="btn-primary w-full sm:w-auto"
+            >
               Permit me to see Demo
-            </button>
+            </SubmitButton>
           ) : (
-            <button type="submit" className="btn-primary w-full sm:w-auto">
+            <SubmitButton pendingLabel="Saving…" className="btn-primary w-full sm:w-auto">
               Save & create invoice
-            </button>
+            </SubmitButton>
           )
         ) : (
           <button
