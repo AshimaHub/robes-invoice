@@ -68,7 +68,7 @@ export function NavigationBusy() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#f4f1ea]/80"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#f6f6f4]/85"
       aria-live="polite"
       aria-busy="true"
     >

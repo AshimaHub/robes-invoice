@@ -88,17 +88,17 @@ export function NrsInvoiceDocument({
             />
             <div className="nrs-logo" aria-hidden>
               <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
-                <circle cx="22" cy="22" r="21" fill="#E8F5E9" stroke="#006837" strokeWidth="1.5" />
+                <circle cx="22" cy="22" r="21" fill="#F4FCD8" stroke="#e10613" strokeWidth="1.5" />
                 <path
                   d="M10 28c4-10 8-14 12-14s8 4 12 14"
-                  stroke="#F9A825"
+                  stroke="#C6EF1A"
                   strokeWidth="2.5"
                   strokeLinecap="round"
                   fill="none"
                 />
                 <path
                   d="M12 24c3.5-7 7-10 10-10s6.5 3 10 10"
-                  stroke="#006837"
+                  stroke="#e10613"
                   strokeWidth="2.5"
                   strokeLinecap="round"
                   fill="none"
@@ -107,7 +107,7 @@ export function NrsInvoiceDocument({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold tracking-tight text-[#006837]">NRS</span>
+                <span className="text-2xl font-bold tracking-tight text-[#e10613]">NRS</span>
                 <span className="h-6 w-px bg-[#cbd5e1]" aria-hidden />
                 <span className="text-sm font-medium text-[#111827]">
                   Nigeria Revenue Service
@@ -140,11 +140,11 @@ export function NrsInvoiceDocument({
         </header>
 
         {/* Banner */}
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-lg bg-[#006837] px-4 py-3 text-white">
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-lg bg-[#e10613] px-4 py-3 text-white">
           <p className="text-lg font-bold tracking-wide sm:text-xl">NRS e-Invoice</p>
           {isValid ? (
-            <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-sm font-bold text-[#006837]">
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#006837] text-[10px] text-white">
+            <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-sm font-bold text-[#e10613]">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#e10613] text-[10px] text-white">
                 ✓
               </span>
               VALID
@@ -171,7 +171,7 @@ export function NrsInvoiceDocument({
           <dl className="space-y-1.5 text-sm sm:text-right">
             <div className="flex flex-wrap gap-x-2 sm:justify-end">
               <dt className="font-bold">Status:</dt>
-              <dd className={isValid ? "font-bold text-[#006837]" : "font-semibold"}>
+              <dd className={isValid ? "font-bold text-[#e10613]" : "font-semibold"}>
                 {statusLabel}
               </dd>
             </div>
@@ -249,7 +249,7 @@ export function NrsInvoiceDocument({
         <div className="mt-6 overflow-x-auto">
           <table className="nrs-lines w-full border-collapse text-xs sm:text-sm">
             <thead>
-              <tr className="bg-[#006837] text-left text-white">
+              <tr className="bg-[#e10613] text-left text-white">
                 <th className="px-3 py-2.5 font-semibold">S/N</th>
                 <th className="px-3 py-2.5 font-semibold">Description of Goods / Services</th>
                 <th className="px-3 py-2.5 text-right font-semibold">Qty</th>
@@ -305,9 +305,9 @@ export function NrsInvoiceDocument({
               <dt>VAT ({vatRate}%)</dt>
               <dd className="font-medium tabular-nums">{naira(invoice.vatTotal)}</dd>
             </div>
-            <div className="flex items-center justify-between rounded border border-[#006837]/25 bg-[#E8F5E9] px-3 py-2.5">
+            <div className="flex items-center justify-between rounded border border-[#e10613]/25 bg-[#F4FCD8] px-3 py-2.5">
               <dt className="font-bold">Grand Total (Incl. VAT)</dt>
-              <dd className="text-base font-bold tabular-nums text-[#006837]">
+              <dd className="text-base font-bold tabular-nums text-[#e10613]">
                 {naira(invoice.grandTotal)}
               </dd>
             </div>
@@ -316,15 +316,15 @@ export function NrsInvoiceDocument({
 
         {/* Payment + QR */}
         <div className="mt-6">
-          <section className="overflow-hidden rounded-lg border border-[#c8e6c9]">
-            <div className="bg-[#E8F5E9] px-4 py-2 text-sm font-bold text-[#006837]">
+          <section className="overflow-hidden rounded-lg border border-[#d5ee6a]">
+            <div className="bg-[#F4FCD8] px-4 py-2 text-sm font-bold text-[#e10613]">
               Payment Information
             </div>
             <div className="space-y-2 px-4 py-3 text-sm">
               <p>
                 <span className="font-semibold">Payment Status: </span>
                 {isValid ? (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#E8F5E9] px-2 py-0.5 text-xs font-bold text-[#006837]">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[#F4FCD8] px-2 py-0.5 text-xs font-bold text-[#e10613]">
                     <span aria-hidden>✓</span> Paid
                   </span>
                 ) : (
@@ -354,13 +354,13 @@ export function NrsInvoiceDocument({
         </div>
 
         {/* Verification bar */}
-        <div className="mt-5 rounded-lg bg-[#E8F5E9] px-4 py-3">
+        <div className="mt-5 rounded-lg bg-[#F4FCD8] px-4 py-3">
           <p className="flex flex-wrap items-center gap-2 text-sm">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#006837] text-xs text-white">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#e10613] text-xs text-white">
               ✓
             </span>
             <span className="font-bold text-[#111827]">Verification / Reference Code: </span>
-            <span className="font-mono font-bold text-[#006837]">{refCode}</span>
+            <span className="font-mono font-bold text-[#e10613]">{refCode}</span>
           </p>
           {invoice.irn ? (
             <p className="mt-1 pl-8 font-mono text-xs text-[#1f2937]">IRN: {invoice.irn}</p>

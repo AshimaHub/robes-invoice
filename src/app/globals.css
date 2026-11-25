@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f4f1ea;
-  --foreground: #1a2a22;
-  --brand-primary: #0b5e3c;
-  --brand-secondary: #c4a35a;
-  --brand-accent: #143d2b;
+  --background: #f7f7f5;
+  --foreground: #161616;
+  --brand-primary: #e10613;
+  --brand-secondary: #c6ef1a;
+  --brand-accent: #111111;
 }
 
 @theme inline {
@@ -57,17 +57,17 @@ body {
   border-radius: 0.5rem;
   border: 1px solid color-mix(in srgb, var(--brand-accent) 22%, transparent);
   background: white;
-  color: #1a2a22;
-  -webkit-text-fill-color: #1a2a22;
-  caret-color: #1a2a22;
+  color: #161616;
+  -webkit-text-fill-color: #161616;
+  caret-color: #161616;
   padding: 0.55rem 0.75rem;
 }
 
 .field:-webkit-autofill,
 .field:-webkit-autofill:hover,
 .field:-webkit-autofill:focus {
-  -webkit-text-fill-color: #1a2a22;
-  caret-color: #1a2a22;
+  -webkit-text-fill-color: #161616;
+  caret-color: #161616;
 }
 
 .field-password {
@@ -95,7 +95,7 @@ body {
 .text-black\/65,
 .text-black\/70,
 .text-black\/75 {
-  color: #1a2a22;
+  color: #161616;
 }
 
 @keyframes rise-in {
@@ -179,16 +179,16 @@ body {
 
 /* —— Auth / login motion background —— */
 .auth-motif-bg--login {
-  color: #e8f0ea;
+  color: #f3f3f3;
 }
 
 .auth-motif-bg--login .login-motif {
-  color: #dce8df;
+  color: #ececec;
 }
 
 /* Softer dark-green motifs on light app chrome */
 .auth-motif-bg--app {
-  color: color-mix(in srgb, var(--brand-primary, #0b5e3c) 72%, #143d2b);
+  color: color-mix(in srgb, var(--brand-accent, #111111) 78%, #e10613);
 }
 
 .auth-motif-bg--app .login-motif {
@@ -199,7 +199,7 @@ body {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 30% 20%, rgba(196, 163, 90, 0.18), transparent 55%),
+    radial-gradient(ellipse at 30% 20%, rgba(198, 239, 26, 0.2), transparent 55%),
     radial-gradient(ellipse at 80% 80%, rgba(0, 0, 0, 0.22), transparent 50%);
 }
 
@@ -207,12 +207,12 @@ body {
   background:
     radial-gradient(
       ellipse at 18% 0%,
-      color-mix(in srgb, var(--brand-secondary, #c4a35a) 20%, transparent),
+      color-mix(in srgb, var(--brand-secondary, #c6ef1a) 22%, transparent),
       transparent 52%
     ),
     radial-gradient(
       ellipse at 92% 100%,
-      color-mix(in srgb, var(--brand-primary, #0b5e3c) 9%, transparent),
+      color-mix(in srgb, var(--brand-primary, #e10613) 10%, transparent),
       transparent 58%
     );
 }

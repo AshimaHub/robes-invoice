@@ -146,7 +146,7 @@ export async function createCompanyInvoice(opts: {
       type: "svg",
       margin: 1,
       width: 160,
-      color: { dark: "#143D2B", light: "#FFFFFF" },
+      color: { dark: "#111111", light: "#FFFFFF" },
     });
   }
 

@@ -114,8 +114,8 @@ export default async function DashboardPage() {
           title="NRS status breakdown"
           emptyLabel="No NRS invoices yet — finish the gate, then issue a mock-cleared e-invoice."
           items={[
-            { label: "Valid (mock)", value: nrsValid, color: "#0B5E3C" },
-            { label: "Submitted", value: nrsSubmitted, color: "#C4A35A" },
+            { label: "Valid (mock)", value: nrsValid, color: "#E10613" },
+            { label: "Submitted", value: nrsSubmitted, color: "#C6EF1A" },
             { label: "Invalid", value: nrsInvalid, color: "#9f1239" },
           ]}
         />

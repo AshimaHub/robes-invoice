@@ -45,9 +45,9 @@ export function CompanyInvoiceDocument({
   const money = (n: number) => naira(n, invoice.currency || "NGN");
 
   return (
-    <article className="company-doc mx-auto w-full max-w-[860px] bg-white text-[#1a2a22] shadow-lg print:shadow-none">
+    <article className="company-doc mx-auto w-full max-w-[860px] bg-white text-[#161616] shadow-lg print:shadow-none">
       <div className="company-doc-inner p-4 sm:p-10">
-        <header className="flex flex-wrap items-start justify-between gap-6 border-b-2 border-[#0b5e3c] pb-6">
+        <header className="flex flex-wrap items-start justify-between gap-6 border-b-2 border-[#e10613] pb-6">
           <div className="flex min-w-0 flex-1 items-start gap-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -56,7 +56,7 @@ export function CompanyInvoiceDocument({
               className="h-24 w-auto max-w-[11rem] shrink-0 object-contain"
             />
             <div className="min-w-0">
-              <h1 className="font-display text-2xl font-semibold tracking-tight text-[#143d2b] sm:text-3xl">
+              <h1 className="font-display text-2xl font-semibold tracking-tight text-[#111111] sm:text-3xl">
                 {invoice.sellerName || "Company invoice"}
               </h1>
               {sellerLines?.map((line) => (
@@ -81,10 +81,10 @@ export function CompanyInvoiceDocument({
               />
             ) : null}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#0b5e3c]">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#e10613]">
                 Invoice
               </p>
-              <p className="mt-1 font-display text-xl font-semibold text-[#143d2b]">
+              <p className="mt-1 font-display text-xl font-semibold text-[#111111]">
                 {invoice.invoiceNumber}
               </p>
               <p className="mt-2 text-sm text-black/65">
@@ -102,10 +102,10 @@ export function CompanyInvoiceDocument({
 
         <section className="mt-8 grid gap-6 sm:grid-cols-2">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0b5e3c]">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#e10613]">
               Bill to
             </p>
-            <p className="mt-2 font-semibold text-[#143d2b]">
+            <p className="mt-2 font-semibold text-[#111111]">
               {invoice.buyerName || "—"}
             </p>
             {buyerLines?.map((line) => (
@@ -121,21 +121,21 @@ export function CompanyInvoiceDocument({
             ) : null}
           </div>
           <div className="sm:text-right">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0b5e3c]">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#e10613]">
               Status
             </p>
-            <p className="mt-2 text-sm font-semibold text-[#143d2b]">{invoice.status}</p>
+            <p className="mt-2 text-sm font-semibold text-[#111111]">{invoice.status}</p>
             {invoice.irn ? (
               <>
-                <p className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-[#0b5e3c]">
+                <p className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-[#e10613]">
                   IRN
                 </p>
-                <p className="mt-1 break-all font-mono text-xs text-[#143d2b]">{invoice.irn}</p>
+                <p className="mt-1 break-all font-mono text-xs text-[#111111]">{invoice.irn}</p>
               </>
             ) : null}
             {invoice.paymentTerms ? (
               <>
-                <p className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-[#0b5e3c]">
+                <p className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-[#e10613]">
                   Payment terms
                 </p>
                 <p className="mt-1 text-sm text-black/70">{invoice.paymentTerms}</p>
@@ -147,17 +147,17 @@ export function CompanyInvoiceDocument({
         <section className="mt-8 overflow-x-auto">
           <table className="company-lines w-full border-collapse text-left text-xs sm:text-sm">
             <thead>
-              <tr className="border-b border-[#0b5e3c]/30 bg-[#0b5e3c]/08">
-                <th className="px-3 py-2.5 font-semibold text-[#143d2b]">#</th>
-                <th className="px-3 py-2.5 font-semibold text-[#143d2b]">Description</th>
-                <th className="px-3 py-2.5 text-right font-semibold text-[#143d2b]">Qty</th>
-                <th className="px-3 py-2.5 text-right font-semibold text-[#143d2b]">
+              <tr className="border-b border-[#e10613]/30 bg-[#e10613]/08">
+                <th className="px-3 py-2.5 font-semibold text-[#111111]">#</th>
+                <th className="px-3 py-2.5 font-semibold text-[#111111]">Description</th>
+                <th className="px-3 py-2.5 text-right font-semibold text-[#111111]">Qty</th>
+                <th className="px-3 py-2.5 text-right font-semibold text-[#111111]">
                   Unit price
                 </th>
-                <th className="px-3 py-2.5 text-right font-semibold text-[#143d2b]">
+                <th className="px-3 py-2.5 text-right font-semibold text-[#111111]">
                   Tax / VAT
                 </th>
-                <th className="px-3 py-2.5 text-right font-semibold text-[#143d2b]">
+                <th className="px-3 py-2.5 text-right font-semibold text-[#111111]">
                   Line total
                 </th>
               </tr>
@@ -200,7 +200,7 @@ export function CompanyInvoiceDocument({
               <span className="text-black/60">Tax / VAT</span>
               <span className="tabular-nums">{money(invoice.vatTotal)}</span>
             </div>
-            <div className="flex justify-between gap-6 border-t border-[#0b5e3c]/25 pt-2 text-base font-semibold text-[#143d2b]">
+            <div className="flex justify-between gap-6 border-t border-[#e10613]/25 pt-2 text-base font-semibold text-[#111111]">
               <span>Grand total</span>
               <span className="tabular-nums">{money(invoice.grandTotal)}</span>
             </div>
@@ -209,7 +209,7 @@ export function CompanyInvoiceDocument({
 
         {invoice.notes ? (
           <section className="mt-8 border-t border-black/10 pt-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0b5e3c]">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#e10613]">
               Notes
             </p>
             <p className="mt-2 whitespace-pre-wrap text-sm text-black/70">{invoice.notes}</p>

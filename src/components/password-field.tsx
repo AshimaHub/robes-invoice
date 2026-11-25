@@ -21,7 +21,7 @@ export function PasswordField({
         type={visible ? "text" : "password"}
         required
         defaultValue={defaultValue}
-        className="field field-password text-[#1a2a22]"
+        className="field field-password text-[#161616]"
         autoComplete="current-password"
       />
       <button

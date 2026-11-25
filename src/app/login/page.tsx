@@ -10,7 +10,7 @@ import {
 import { AuthMotifBackground } from "@/components/auth-motif-background";
 import { PasswordField } from "@/components/password-field";
 import { SubmitButton } from "@/components/submit-button";
-import { APP_LOGO, APP_NAME } from "@/lib/brand";
+import { APP_LOGO, APP_NAME, BRAND_BLACK, BRAND_LIME, BRAND_RED } from "@/lib/brand";
 
 export const instant = false;
 
@@ -41,9 +41,9 @@ export default async function LoginPage({
   if (stalePresent) redirect(CLEAR_SESSION_PATH);
 
   const params = await searchParams;
-  const primary = "#0B5E3C";
-  const secondary = "#C4A35A";
-  const accent = "#143D2B";
+  const primary = BRAND_RED;
+  const secondary = BRAND_LIME;
+  const accent = BRAND_BLACK;
 
   return (
     <div
@@ -59,7 +59,7 @@ export default async function LoginPage({
     >
       <AuthMotifBackground variant="login" />
 
-      <div className="anim-rise relative z-10 w-full max-w-md rounded-2xl bg-[#f7f4ec] p-5 text-[#1a2a22] shadow-xl shadow-black/30 sm:p-8">
+      <div className="anim-rise relative z-10 w-full max-w-md rounded-2xl bg-white p-5 text-[#161616] shadow-xl shadow-black/30 sm:p-8">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={APP_LOGO}
@@ -90,7 +90,7 @@ export default async function LoginPage({
               type="text"
               required
               defaultValue="admin"
-              className="field text-[#1a2a22]"
+              className="field text-[#161616]"
               autoComplete="username"
             />
           </div>

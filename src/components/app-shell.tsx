@@ -2,7 +2,7 @@ import Link from "next/link";
 import { logout } from "@/lib/auth";
 import type { SessionUser } from "@/lib/auth";
 import { AuthMotifBackground } from "@/components/auth-motif-background";
-import { APP_LOGO, APP_NAME } from "@/lib/brand";
+import { APP_LOGO, APP_NAME, BRAND_BLACK, BRAND_LIME, BRAND_RED } from "@/lib/brand";
 
 const primaryNav = [
   { href: "/dashboard", label: "Dashboard" },
@@ -23,9 +23,10 @@ export function AppShell({
   } | null;
   children: React.ReactNode;
 }) {
-  const primary = branding?.primaryColor ?? "#0B5E3C";
-  const secondary = branding?.secondaryColor ?? "#C4A35A";
-  const accent = branding?.accentColor ?? "#143D2B";
+  const primary = BRAND_RED;
+  const secondary = BRAND_LIME;
+  const accent = BRAND_BLACK;
+  void branding;
 
   return (
     <div
@@ -36,14 +37,14 @@ export function AppShell({
           "--brand-secondary": secondary,
           "--brand-accent": accent,
           background:
-            "radial-gradient(1200px 500px at 10% -10%, color-mix(in srgb, var(--brand-secondary) 28%, transparent), transparent), linear-gradient(165deg, #f7f4ec 0%, #eef3ef 45%, #e8efe9 100%)",
+            "radial-gradient(900px 420px at 0% -8%, color-mix(in srgb, var(--brand-secondary) 42%, transparent), transparent), radial-gradient(700px 360px at 100% 0%, color-mix(in srgb, var(--brand-primary) 14%, transparent), transparent), linear-gradient(180deg, #ffffff 0%, #f6f6f4 100%)",
         } as React.CSSProperties
       }
     >
       <AuthMotifBackground variant="app" />
       <header
         className="relative z-10 border-b border-black/10 print:hidden"
-        style={{ background: "color-mix(in srgb, var(--brand-accent) 92%, black)" }}
+        style={{ background: "var(--brand-accent)" }}
       >
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-3 text-white">
           <div className="flex min-w-0 items-center gap-3">

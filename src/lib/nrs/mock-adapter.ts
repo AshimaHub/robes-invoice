@@ -29,7 +29,7 @@ export class MockNrsAdapter implements NrsAdapter {
       type: "svg",
       margin: 1,
       width: 180,
-      color: { dark: "#143D2B", light: "#FFFFFF" },
+      color: { dark: "#111111", light: "#FFFFFF" },
     });
 
     // Simulate a brief clearance pipeline delay feel without blocking UX long.

@@ -35,9 +35,9 @@ async function main() {
       nrsEnv: "SANDBOX",
       branding: {
         create: {
-          primaryColor: "#0B5E3C",
-          secondaryColor: "#C4A35A",
-          accentColor: "#143D2B",
+          primaryColor: "#E10613",
+          secondaryColor: "#C6EF1A",
+          accentColor: "#111111",
           loginHeroText:
             "Company invoicing and NRS-compliant e-invoice tools.",
           emailFromName: "Ibrahim Abdullahi & Co",
@@ -155,7 +155,7 @@ async function main() {
     type: "svg",
     margin: 1,
     width: 180,
-    color: { dark: "#143D2B", light: "#FFFFFF" },
+    color: { dark: "#111111", light: "#FFFFFF" },
   });
 
   const nrsInvoice = await prisma.invoice.create({
@@ -237,7 +237,7 @@ async function main() {
     type: "svg",
     margin: 1,
     width: 160,
-    color: { dark: "#143D2B", light: "#FFFFFF" },
+    color: { dark: "#111111", light: "#FFFFFF" },
   });
 
   const companyInvoice = await prisma.invoice.create({

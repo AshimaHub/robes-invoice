@@ -103,7 +103,7 @@ export default async function NrsInvoiceDetailPage({
       </div>
 
       {sp.cleared ? (
-        <p className="anim-pulse-once rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-900">
+        <p className="anim-pulse-once rounded-md bg-[#F4FCD8] px-3 py-2 text-sm text-[#111111]">
           Mock clearance succeeded. IRN and QR are ready below.
         </p>
       ) : null}
