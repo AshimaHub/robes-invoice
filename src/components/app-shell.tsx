@@ -30,7 +30,7 @@ export function AppShell({
 
   return (
     <div
-      className="relative min-h-screen"
+      className="relative flex min-h-screen flex-col"
       style={
         {
           "--brand-primary": primary,
@@ -94,13 +94,18 @@ export function AppShell({
           ))}
         </nav>
       </header>
-      <main className="relative z-10 mx-auto max-w-6xl px-4 py-8">{children}</main>
-      <footer className="relative z-10 mx-auto max-w-6xl px-4 pb-8 text-xs text-[#5c5c5c] print:hidden">
-        <p>
-          {APP_NAME} — company invoicing plus optional NRS mock clearance (not live Nigeria
-          Revenue Service submission).
-        </p>
-        <p className="mt-1">© Ibrahim Abdullahi & Co 2026</p>
+      <main className="relative z-10 mx-auto w-full max-w-6xl flex-1 px-4 py-8">{children}</main>
+      <footer
+        className="relative z-10 mt-auto border-t border-white/10 print:hidden"
+        style={{ background: "var(--brand-accent)" }}
+      >
+        <div className="mx-auto max-w-6xl px-4 py-4 text-xs leading-relaxed text-white">
+          <p>
+            {APP_NAME} — company invoicing plus optional NRS mock clearance (not live Nigeria
+            Revenue Service submission).
+          </p>
+          <p className="mt-1">© Ibrahim Abdullahi & Co 2026</p>
+        </div>
       </footer>
     </div>
   );

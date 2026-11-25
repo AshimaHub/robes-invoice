@@ -47,7 +47,7 @@ export default async function LoginPage({
 
   return (
     <div
-      className="relative flex min-h-screen items-center justify-center px-4 py-10 text-[#f5f0e6]"
+      className="relative flex min-h-screen flex-col text-[#f5f0e6]"
       style={
         {
           "--brand-primary": primary,
@@ -59,7 +59,7 @@ export default async function LoginPage({
     >
       <AuthMotifBackground variant="login" />
 
-      <div className="anim-rise relative z-10 w-full max-w-md rounded-2xl bg-white p-5 text-[#161616] shadow-xl shadow-black/30 sm:p-8">
+      <div className="anim-rise relative z-10 m-auto w-full max-w-md rounded-2xl bg-white p-5 text-[#161616] shadow-xl shadow-black/30 sm:p-8">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={APP_LOGO}
@@ -114,6 +114,13 @@ export default async function LoginPage({
           <p className="mt-2 italic">Demo tenant data only.</p>
         </div>
       </div>
+      <footer className="relative z-10 w-full border-t border-white/15 px-4 py-4 text-center text-xs leading-relaxed text-white">
+        <p>
+          {APP_NAME} — company invoicing plus optional NRS mock clearance (not live Nigeria
+          Revenue Service submission).
+        </p>
+        <p className="mt-1">© Ibrahim Abdullahi & Co 2026</p>
+      </footer>
     </div>
   );
 }
