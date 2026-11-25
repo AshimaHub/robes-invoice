@@ -379,14 +379,21 @@ body {
 
 /* —— NRS fiscal document —— */
 .nrs-qr svg {
-  width: 140px;
-  height: 140px;
+  width: 96px;
+  height: 96px;
   display: block;
 }
 
 .nrs-qr svg path,
 .company-qr svg path {
   fill: #111111;
+}
+
+.nrs-qr svg path[fill="#FFFFFF"],
+.nrs-qr svg path[fill="#ffffff"],
+.company-qr svg path[fill="#FFFFFF"],
+.company-qr svg path[fill="#ffffff"] {
+  fill: #ffffff;
 }
 
 .invoice-pair {
@@ -411,8 +418,8 @@ body {
 
 /* —— Company commercial invoice —— */
 .company-qr svg {
-  width: 120px;
-  height: 120px;
+  width: 96px;
+  height: 96px;
   display: block;
 }
 

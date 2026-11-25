@@ -1,4 +1,5 @@
 import type { Invoice, InvoiceLine } from "@prisma/client";
+import { FirmLetterhead } from "@/components/firm-letterhead";
 import { APP_LOGO } from "@/lib/brand";
 
 export type CompanyDocumentInvoice = Invoice & {
@@ -47,32 +48,17 @@ export function CompanyInvoiceDocument({
   return (
     <article className="company-doc mx-auto w-full max-w-[860px] bg-white text-[#161616] shadow-lg print:shadow-none">
       <div className="company-doc-inner p-4 sm:p-10">
-        <header className="invoice-head flex flex-wrap items-start justify-between gap-6 border-b-2 border-[#e10613] pb-6">
-          <div className="flex min-w-0 flex-1 items-start gap-4">
+        <header className="invoice-head flex flex-nowrap items-start justify-between gap-3 border-b-2 border-[#e10613] pb-4">
+          <div className="flex w-24 shrink-0 items-start">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={invoice.logoSnapshotUrl || APP_LOGO}
               alt=""
-              className="h-24 w-auto max-w-[11rem] shrink-0 object-contain"
+              className="h-20 w-auto max-w-full object-contain"
             />
-            <div className="min-w-0">
-              <h1 className="font-display text-2xl font-semibold tracking-tight text-[#111111] sm:text-3xl">
-                {invoice.sellerName || "Company invoice"}
-              </h1>
-              {sellerLines?.map((line) => (
-                <p key={line} className="mt-0.5 text-sm text-black/65">
-                  {line}
-                </p>
-              ))}
-              <div className="mt-2 space-y-0.5 text-sm text-black/65">
-                {invoice.sellerPhone ? <p>Tel: {invoice.sellerPhone}</p> : null}
-                {invoice.sellerEmail ? <p>Email: {invoice.sellerEmail}</p> : null}
-                {invoice.sellerTin ? <p>TIN: {invoice.sellerTin}</p> : null}
-              </div>
-            </div>
           </div>
-
-          <div className="flex flex-col items-end gap-3 text-right">
+          <FirmLetterhead />
+          <div className="flex w-24 shrink-0 justify-end">
             {invoice.includeQr && invoice.qrSvg ? (
               <div
                 className="company-qr"
@@ -80,28 +66,53 @@ export function CompanyInvoiceDocument({
                 title="Scan for invoice details"
               />
             ) : null}
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#e10613]">
-                Invoice
-              </p>
-              <p className="mt-1 font-display text-xl font-semibold text-[#111111]">
-                {invoice.invoiceNumber}
-              </p>
-              <p className="mt-2 text-sm text-black/65">
-                Issue date: {formatLongDate(invoice.issueDate)}
-              </p>
-              <p className="text-sm text-black/65">
-                Due date: {formatLongDate(invoice.dueDate)}
-              </p>
-              <p className="text-sm text-black/65">
-                Currency: {invoice.currency === "NGN" ? "₦ NGN" : invoice.currency}
-              </p>
-            </div>
           </div>
         </header>
-
-        <section className="invoice-pair mt-8">
+        <div className="mt-3 flex flex-wrap items-start justify-between gap-x-4 gap-y-1 text-sm">
           <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#e10613]">
+              Invoice
+            </p>
+            <p className="font-display text-xl font-semibold text-[#111111]">
+              {invoice.invoiceNumber}
+            </p>
+          </div>
+          <div className="text-right text-black/65">
+            <p>Issue date: {formatLongDate(invoice.issueDate)}</p>
+            <p>Due date: {formatLongDate(invoice.dueDate)}</p>
+            <p>Currency: {invoice.currency === "NGN" ? "₦ NGN" : invoice.currency}</p>
+            <p className="font-semibold text-[#111111]">{invoice.status}</p>
+            {invoice.irn ? (
+              <p className="break-all font-mono text-[10px] text-[#111111]">{invoice.irn}</p>
+            ) : null}
+            {invoice.paymentTerms ? <p>{invoice.paymentTerms}</p> : null}
+          </div>
+        </div>
+
+        <section className="invoice-pair mt-6">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#e10613]">
+              Seller
+            </p>
+            <p className="mt-2 font-semibold text-[#111111]">
+              {invoice.sellerName || "—"}
+            </p>
+            {sellerLines?.map((line) => (
+              <p key={line} className="text-sm text-black/65">
+                {line}
+              </p>
+            ))}
+            {invoice.sellerPhone ? (
+              <p className="text-sm text-black/65">Tel: {invoice.sellerPhone}</p>
+            ) : null}
+            {invoice.sellerEmail ? (
+              <p className="text-sm text-black/65">Email: {invoice.sellerEmail}</p>
+            ) : null}
+            {invoice.sellerTin ? (
+              <p className="text-sm text-black/65">TIN: {invoice.sellerTin}</p>
+            ) : null}
+          </div>
+          <div className="invoice-pair-end">
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#e10613]">
               Bill to
             </p>
@@ -118,28 +129,6 @@ export function CompanyInvoiceDocument({
             ) : null}
             {invoice.buyerEmail ? (
               <p className="text-sm text-black/65">Email: {invoice.buyerEmail}</p>
-            ) : null}
-          </div>
-          <div className="invoice-pair-end">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#e10613]">
-              Status
-            </p>
-            <p className="mt-2 text-sm font-semibold text-[#111111]">{invoice.status}</p>
-            {invoice.irn ? (
-              <>
-                <p className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-[#e10613]">
-                  IRN
-                </p>
-                <p className="mt-1 break-all font-mono text-xs text-[#111111]">{invoice.irn}</p>
-              </>
-            ) : null}
-            {invoice.paymentTerms ? (
-              <>
-                <p className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-[#e10613]">
-                  Payment terms
-                </p>
-                <p className="mt-1 text-sm text-black/70">{invoice.paymentTerms}</p>
-              </>
             ) : null}
           </div>
         </section>

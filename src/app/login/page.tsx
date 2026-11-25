@@ -10,6 +10,7 @@ import {
 import { AuthMotifBackground } from "@/components/auth-motif-background";
 import { PasswordField } from "@/components/password-field";
 import { SubmitButton } from "@/components/submit-button";
+import { FirmFooter } from "@/components/firm-footer";
 import { APP_LOGO, APP_NAME, BRAND_BLACK, BRAND_BLEND, BRAND_RED } from "@/lib/brand";
 
 export const instant = false;
@@ -114,13 +115,7 @@ export default async function LoginPage({
           <p className="mt-2 italic">Demo tenant data only.</p>
         </div>
       </div>
-      <footer className="relative z-10 w-full border-t border-white/15 px-4 py-4 text-center text-xs leading-relaxed text-white">
-        <p>
-          {APP_NAME} — company invoicing plus optional NRS mock clearance (not live Nigeria
-          Revenue Service submission).
-        </p>
-        <p className="mt-1">© Ibrahim Abdullahi & Co 2026</p>
-      </footer>
+      <FirmFooter className="relative z-10" />
     </div>
   );
 }

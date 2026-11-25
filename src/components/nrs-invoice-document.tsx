@@ -1,4 +1,5 @@
 import type { Invoice, InvoiceLine, Party, Tenant } from "@prisma/client";
+import { FirmLetterhead } from "@/components/firm-letterhead";
 import { APP_LOGO } from "@/lib/brand";
 
 export type NrsDocumentInvoice = Invoice & {
@@ -78,16 +79,17 @@ export function NrsInvoiceDocument({
     <article className="nrs-doc mx-auto w-full max-w-[900px] bg-white text-[#1a1a1a] shadow-lg print:shadow-none">
       <div className="nrs-doc-inner p-6 sm:p-8">
         {/* Header */}
-        <header className="invoice-head flex flex-wrap items-start justify-between gap-4 border-b border-[#e5e7eb] pb-5">
-          <div className="flex min-w-0 items-center gap-3">
+        <header className="invoice-head flex flex-nowrap items-start justify-between gap-3 border-b border-[#e5e7eb] pb-4">
+          <div className="flex w-24 shrink-0 items-start">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={invoice.logoSnapshotUrl || APP_LOGO}
               alt=""
-              className="h-24 w-auto max-w-[11rem] shrink-0 object-contain"
+              className="h-20 w-auto max-w-full object-contain"
             />
           </div>
-          <div className="flex flex-col items-end gap-3 text-right">
+          <FirmLetterhead />
+          <div className="flex w-24 shrink-0 flex-col items-end gap-2 text-right">
             {showQr ? (
               invoice.qrSvg ? (
                 <div
@@ -95,19 +97,11 @@ export function NrsInvoiceDocument({
                   dangerouslySetInnerHTML={{ __html: invoice.qrSvg }}
                 />
               ) : (
-                <div className="flex h-[120px] w-[120px] items-center justify-center rounded border border-dashed border-[#cbd5e1] text-center text-xs text-[#374151]">
+                <div className="flex h-24 w-24 items-center justify-center rounded border border-dashed border-[#cbd5e1] text-center text-[10px] leading-tight text-[#374151]">
                   QR after clearance
                 </div>
               )
             ) : null}
-            <div>
-              <p className="text-sm font-bold text-[#111827]">
-                Electronic Tax Invoice (e-Invoice)
-              </p>
-              <p className="mt-0.5 max-w-[260px] text-xs text-[#1f2937]">
-                Issued under the Nigeria Revenue Service (NRS) e-Invoicing System
-              </p>
-            </div>
           </div>
         </header>
 
