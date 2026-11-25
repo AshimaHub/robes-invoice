@@ -95,9 +95,12 @@ export function AppShell({
         </nav>
       </header>
       <main className="relative z-10 mx-auto max-w-6xl px-4 py-8">{children}</main>
-      <footer className="relative z-10 mx-auto max-w-6xl px-4 pb-8 text-xs text-black/50 print:hidden">
-        {APP_NAME} — company invoicing plus optional NRS mock clearance (not live Nigeria
-        Revenue Service submission).
+      <footer className="relative z-10 mx-auto max-w-6xl px-4 pb-8 text-xs text-[#5c5c5c] print:hidden">
+        <p>
+          {APP_NAME} — company invoicing plus optional NRS mock clearance (not live Nigeria
+          Revenue Service submission).
+        </p>
+        <p className="mt-1">© Ibrahim Abdullahi & Co 2026</p>
       </footer>
     </div>
   );

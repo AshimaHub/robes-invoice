@@ -47,7 +47,7 @@ export function CompanyInvoiceDocument({
   return (
     <article className="company-doc mx-auto w-full max-w-[860px] bg-white text-[#161616] shadow-lg print:shadow-none">
       <div className="company-doc-inner p-4 sm:p-10">
-        <header className="flex flex-wrap items-start justify-between gap-6 border-b-2 border-[#e10613] pb-6">
+        <header className="invoice-head flex flex-wrap items-start justify-between gap-6 border-b-2 border-[#e10613] pb-6">
           <div className="flex min-w-0 flex-1 items-start gap-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -100,7 +100,7 @@ export function CompanyInvoiceDocument({
           </div>
         </header>
 
-        <section className="mt-8 grid gap-6 sm:grid-cols-2">
+        <section className="invoice-pair mt-8">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#e10613]">
               Bill to
@@ -120,7 +120,7 @@ export function CompanyInvoiceDocument({
               <p className="text-sm text-black/65">Email: {invoice.buyerEmail}</p>
             ) : null}
           </div>
-          <div className="sm:text-right">
+          <div className="invoice-pair-end">
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#e10613]">
               Status
             </p>

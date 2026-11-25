@@ -78,7 +78,7 @@ export function NrsInvoiceDocument({
     <article className="nrs-doc mx-auto w-full max-w-[900px] bg-white text-[#1a1a1a] shadow-lg print:shadow-none">
       <div className="nrs-doc-inner p-6 sm:p-8">
         {/* Header */}
-        <header className="flex flex-wrap items-start justify-between gap-4 border-b border-[#e5e7eb] pb-5">
+        <header className="invoice-head flex flex-wrap items-start justify-between gap-4 border-b border-[#e5e7eb] pb-5">
           <div className="flex min-w-0 items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -129,7 +129,7 @@ export function NrsInvoiceDocument({
         </div>
 
         {/* Meta */}
-        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+        <div className="invoice-pair mt-5">
           <dl className="space-y-1.5 text-sm">
             <div className="flex flex-wrap gap-x-2">
               <dt className="font-bold">Invoice No.:</dt>
@@ -140,14 +140,14 @@ export function NrsInvoiceDocument({
               <dd>{formatIssueDateTime(invoice.issueDate)}</dd>
             </div>
           </dl>
-          <dl className="space-y-1.5 text-sm sm:text-right">
-            <div className="flex flex-wrap gap-x-2 sm:justify-end">
+            <dl className="invoice-pair-end space-y-1.5 text-sm">
+            <div className="flex flex-wrap gap-x-2 invoice-pair-end">
               <dt className="font-bold">Status:</dt>
               <dd className={isValid ? "font-bold text-[#e10613]" : "font-semibold"}>
                 {statusLabel}
               </dd>
             </div>
-            <div className="flex flex-wrap gap-x-2 sm:justify-end">
+            <div className="flex flex-wrap gap-x-2 invoice-pair-end">
               <dt className="font-bold">Invoice Type:</dt>
               <dd>{invoiceTypeLabel(invoice.documentType, invoice.invoiceKind)}</dd>
             </div>
@@ -155,7 +155,7 @@ export function NrsInvoiceDocument({
         </div>
 
         {/* Seller / Buyer */}
-        <div className="mt-5 grid gap-4 md:grid-cols-2">
+        <div className="invoice-pair mt-5">
           <section className="rounded-lg bg-[#f3f4f6] p-4 text-sm">
             <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-[#1f2937]">
               Seller (Supplier)
