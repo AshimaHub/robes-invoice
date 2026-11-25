@@ -150,7 +150,7 @@ function BriefingCard({ completed, saved }: { completed: boolean; saved: boolean
         </p>
       ) : null}
       {completed ? (
-        <p className="rounded-md bg-[#F4FCD8] px-3 py-2 text-sm text-[#111111]">
+        <p className="rounded-md bg-[#F6E8E9] px-3 py-2 text-sm text-[#111111]">
           This organisation is ready. You can review the answers or go back to the dashboard.
         </p>
       ) : null}

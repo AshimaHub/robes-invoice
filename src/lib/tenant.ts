@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { APP_LOGO, APP_NAME, BRAND_BLACK, BRAND_LIME, BRAND_RED, LEGACY_DEMO_LOGO } from "./brand";
+import { APP_LOGO, APP_NAME, BRAND_BLACK, BRAND_BLEND, BRAND_RED, LEGACY_DEMO_LOGO } from "./brand";
 import { prisma } from "./prisma";
 
 function withoutAcme(value: string) {
@@ -78,19 +78,19 @@ export const getTenantWithBranding = cache(async (tenantId: string) => {
   if (!tenant?.branding) return tenant;
   if (
     tenant.branding.primaryColor.toLowerCase() !== BRAND_RED.toLowerCase() ||
-    tenant.branding.secondaryColor.toLowerCase() !== BRAND_LIME.toLowerCase() ||
+    tenant.branding.secondaryColor.toLowerCase() !== BRAND_BLEND.toLowerCase() ||
     tenant.branding.accentColor.toLowerCase() !== BRAND_BLACK.toLowerCase()
   ) {
     await prisma.branding.update({
       where: { id: tenant.branding.id },
       data: {
         primaryColor: BRAND_RED,
-        secondaryColor: BRAND_LIME,
+        secondaryColor: BRAND_BLEND,
         accentColor: BRAND_BLACK,
       },
     });
     tenant.branding.primaryColor = BRAND_RED;
-    tenant.branding.secondaryColor = BRAND_LIME;
+    tenant.branding.secondaryColor = BRAND_BLEND;
     tenant.branding.accentColor = BRAND_BLACK;
   }
   const currentLogo = tenant.branding.logoUrl;
@@ -125,7 +125,7 @@ export function brandingCssVars(branding: {
   accentColor: string;
 } | null) {
   const primary = BRAND_RED;
-  const secondary = BRAND_LIME;
+  const secondary = BRAND_BLEND;
   const accent = BRAND_BLACK;
   void branding;
   return {

@@ -4,7 +4,7 @@
   --background: #f7f7f5;
   --foreground: #161616;
   --brand-primary: #e10613;
-  --brand-secondary: #c6ef1a;
+  --brand-secondary: #f6e8e9;
   --brand-accent: #111111;
 }
 
@@ -207,7 +207,7 @@ body {
   background:
     radial-gradient(
       ellipse at 18% 0%,
-      color-mix(in srgb, var(--brand-secondary, #c6ef1a) 22%, transparent),
+      color-mix(in srgb, var(--brand-secondary, #f6e8e9) 22%, transparent),
       transparent 52%
     ),
     radial-gradient(
@@ -384,6 +384,11 @@ body {
   display: block;
 }
 
+.nrs-qr svg path,
+.company-qr svg path {
+  fill: #111111;
+}
+
 .nrs-lines th:first-child,
 .nrs-lines td:first-child {
   width: 3rem;
@@ -476,6 +481,11 @@ body {
   }
 }
 
+@page {
+  size: A4 portrait;
+  margin: 8mm;
+}
+
 @media print {
   .auth-motif-bg,
   .login-motion {
@@ -483,7 +493,8 @@ body {
   }
 
   .nrs-document-shell,
-  .document-shell {
+  .document-shell,
+  body {
     background: white !important;
   }
 
@@ -504,16 +515,12 @@ body {
   .nrs-doc,
   .company-doc {
     box-shadow: none !important;
-    max-width: none !important;
+    margin: 0 auto !important;
   }
 
-  .nrs-doc-inner,
-  .company-doc-inner {
-    padding: 0 !important;
-  }
-
-  body {
-    background: white !important;
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 }
 

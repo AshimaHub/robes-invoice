@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { requireSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { CompanyInvoiceDocument } from "@/components/company-invoice-document";
-import { PrintButton } from "@/components/print-button";
+import { DownloadPdfButton, PrintButton } from "@/components/print-button";
 
 export const instant = false;
 
@@ -41,6 +41,10 @@ export default async function CompanyInvoiceViewPage({
             ← Detail
           </Link>
           <PrintButton className="rounded-md bg-[#e10613] px-3 py-2 text-sm font-semibold text-white hover:brightness-105" />
+          <DownloadPdfButton
+            fileName={invoice.invoiceNumber}
+            className="rounded-md bg-[#111111] px-3 py-2 text-sm font-semibold text-white hover:brightness-110 disabled:opacity-70"
+          />
         </div>
       </div>
 

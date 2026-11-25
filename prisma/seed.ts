@@ -36,7 +36,7 @@ async function main() {
       branding: {
         create: {
           primaryColor: "#E10613",
-          secondaryColor: "#C6EF1A",
+          secondaryColor: "#F6E8E9",
           accentColor: "#111111",
           loginHeroText:
             "Company invoicing and NRS-compliant e-invoice tools.",

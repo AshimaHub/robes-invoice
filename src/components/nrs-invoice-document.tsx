@@ -86,34 +86,6 @@ export function NrsInvoiceDocument({
               alt=""
               className="h-24 w-auto max-w-[11rem] shrink-0 object-contain"
             />
-            <div className="nrs-logo" aria-hidden>
-              <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
-                <circle cx="22" cy="22" r="21" fill="#F4FCD8" stroke="#e10613" strokeWidth="1.5" />
-                <path
-                  d="M10 28c4-10 8-14 12-14s8 4 12 14"
-                  stroke="#C6EF1A"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  fill="none"
-                />
-                <path
-                  d="M12 24c3.5-7 7-10 10-10s6.5 3 10 10"
-                  stroke="#e10613"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  fill="none"
-                />
-              </svg>
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold tracking-tight text-[#e10613]">NRS</span>
-                <span className="h-6 w-px bg-[#cbd5e1]" aria-hidden />
-                <span className="text-sm font-medium text-[#111827]">
-                  Nigeria Revenue Service
-                </span>
-              </div>
-            </div>
           </div>
           <div className="flex flex-col items-end gap-3 text-right">
             {showQr ? (
@@ -305,7 +277,7 @@ export function NrsInvoiceDocument({
               <dt>VAT ({vatRate}%)</dt>
               <dd className="font-medium tabular-nums">{naira(invoice.vatTotal)}</dd>
             </div>
-            <div className="flex items-center justify-between rounded border border-[#e10613]/25 bg-[#F4FCD8] px-3 py-2.5">
+            <div className="flex items-center justify-between rounded border border-[#e10613]/25 bg-[#F6E8E9] px-3 py-2.5">
               <dt className="font-bold">Grand Total (Incl. VAT)</dt>
               <dd className="text-base font-bold tabular-nums text-[#e10613]">
                 {naira(invoice.grandTotal)}
@@ -316,21 +288,11 @@ export function NrsInvoiceDocument({
 
         {/* Payment + QR */}
         <div className="mt-6">
-          <section className="overflow-hidden rounded-lg border border-[#d5ee6a]">
-            <div className="bg-[#F4FCD8] px-4 py-2 text-sm font-bold text-[#e10613]">
+          <section className="overflow-hidden rounded-lg border border-[#e7c9cb]">
+            <div className="bg-[#F6E8E9] px-4 py-2 text-sm font-bold text-[#e10613]">
               Payment Information
             </div>
             <div className="space-y-2 px-4 py-3 text-sm">
-              <p>
-                <span className="font-semibold">Payment Status: </span>
-                {isValid ? (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#F4FCD8] px-2 py-0.5 text-xs font-bold text-[#e10613]">
-                    <span aria-hidden>✓</span> Paid
-                  </span>
-                ) : (
-                  <span className="text-[#1f2937]">Pending</span>
-                )}
-              </p>
               <p>
                 <span className="font-semibold">Payment Method: </span>
                 Bank Transfer (demo)
@@ -354,7 +316,7 @@ export function NrsInvoiceDocument({
         </div>
 
         {/* Verification bar */}
-        <div className="mt-5 rounded-lg bg-[#F4FCD8] px-4 py-3">
+        <div className="mt-5 rounded-lg bg-[#F6E8E9] px-4 py-3">
           <p className="flex flex-wrap items-center gap-2 text-sm">
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#e10613] text-xs text-white">
               ✓

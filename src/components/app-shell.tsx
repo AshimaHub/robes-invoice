@@ -2,7 +2,7 @@ import Link from "next/link";
 import { logout } from "@/lib/auth";
 import type { SessionUser } from "@/lib/auth";
 import { AuthMotifBackground } from "@/components/auth-motif-background";
-import { APP_LOGO, APP_NAME, BRAND_BLACK, BRAND_LIME, BRAND_RED } from "@/lib/brand";
+import { APP_LOGO, APP_NAME, BRAND_BLACK, BRAND_BLEND, BRAND_RED } from "@/lib/brand";
 
 const primaryNav = [
   { href: "/dashboard", label: "Dashboard" },
@@ -24,7 +24,7 @@ export function AppShell({
   children: React.ReactNode;
 }) {
   const primary = BRAND_RED;
-  const secondary = BRAND_LIME;
+  const secondary = BRAND_BLEND;
   const accent = BRAND_BLACK;
   void branding;
 

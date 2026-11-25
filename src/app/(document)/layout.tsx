@@ -11,7 +11,7 @@ export default async function DocumentLayout({
 }) {
   await requireSession();
   return (
-    <div className="document-shell nrs-document-shell min-h-screen bg-[#eef2f0]">
+    <div className="document-shell nrs-document-shell min-h-screen bg-[#f3f3f3]">
       {children}
     </div>
   );

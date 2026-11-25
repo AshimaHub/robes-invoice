@@ -10,7 +10,7 @@ import {
 import { AuthMotifBackground } from "@/components/auth-motif-background";
 import { PasswordField } from "@/components/password-field";
 import { SubmitButton } from "@/components/submit-button";
-import { APP_LOGO, APP_NAME, BRAND_BLACK, BRAND_LIME, BRAND_RED } from "@/lib/brand";
+import { APP_LOGO, APP_NAME, BRAND_BLACK, BRAND_BLEND, BRAND_RED } from "@/lib/brand";
 
 export const instant = false;
 
@@ -42,7 +42,7 @@ export default async function LoginPage({
 
   const params = await searchParams;
   const primary = BRAND_RED;
-  const secondary = BRAND_LIME;
+  const secondary = BRAND_BLEND;
   const accent = BRAND_BLACK;
 
   return (

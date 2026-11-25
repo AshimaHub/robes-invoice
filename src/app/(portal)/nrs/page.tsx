@@ -82,7 +82,7 @@ export default async function NrsHubPage({
           submission.
         </p>
         {params.gate === "passed" ? (
-          <p className="mt-3 rounded-md bg-[#F4FCD8] px-3 py-2 text-sm text-[#111111]">
+          <p className="mt-3 rounded-md bg-[#F6E8E9] px-3 py-2 text-sm text-[#111111]">
             Readiness gate passed. You can create NRS e-invoices.
           </p>
         ) : null}
