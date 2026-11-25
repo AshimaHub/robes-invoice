@@ -1,4 +1,3 @@
-import { FirmFooter } from "@/components/firm-footer";
 import { requireSession } from "@/lib/auth";
 
 /** Session-gated document views; allow blocking (no instant shell). */
@@ -12,9 +11,8 @@ export default async function DocumentLayout({
 }) {
   await requireSession();
   return (
-    <div className="document-shell nrs-document-shell flex min-h-screen flex-col bg-[#f3f3f3]">
-      <div className="flex-1">{children}</div>
-      <FirmFooter />
+    <div className="document-shell nrs-document-shell min-h-screen bg-[#f3f3f3]">
+      {children}
     </div>
   );
 }

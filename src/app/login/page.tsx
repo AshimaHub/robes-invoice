@@ -10,7 +10,6 @@ import {
 import { AuthMotifBackground } from "@/components/auth-motif-background";
 import { PasswordField } from "@/components/password-field";
 import { SubmitButton } from "@/components/submit-button";
-import { FirmFooter } from "@/components/firm-footer";
 import { APP_LOGO, APP_NAME, BRAND_BLACK, BRAND_BLEND, BRAND_RED } from "@/lib/brand";
 
 export const instant = false;
@@ -48,7 +47,7 @@ export default async function LoginPage({
 
   return (
     <div
-      className="relative flex min-h-screen flex-col text-[#f5f0e6]"
+      className="relative flex min-h-screen items-center justify-center px-4 py-10 text-[#f5f0e6]"
       style={
         {
           "--brand-primary": primary,
@@ -60,7 +59,7 @@ export default async function LoginPage({
     >
       <AuthMotifBackground variant="login" />
 
-      <div className="anim-rise relative z-10 m-auto w-full max-w-md rounded-2xl bg-white p-5 text-[#161616] shadow-xl shadow-black/30 sm:p-8">
+      <div className="anim-rise relative z-10 w-full max-w-md rounded-2xl bg-white p-5 text-[#161616] shadow-xl shadow-black/30 sm:p-8">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={APP_LOGO}
@@ -115,7 +114,6 @@ export default async function LoginPage({
           <p className="mt-2 italic">Demo tenant data only.</p>
         </div>
       </div>
-      <FirmFooter className="relative z-10" />
     </div>
   );
 }
